@@ -1,10 +1,27 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
+
 import pandas as pd
 
+class Mapper:
+    def __init__(self, ):
+        """a Mapper object.
+        each attribute"""
+        
+    def add_map(self, column: str, map: Dict[str, float]) -> None:
+        setattr(self, column, map)
+        
+    def items(self):
+        return self.__dict__.items()
+    
+    def __repr__(self) -> str:
+        return f"Mapper(cols={list(self.__dict__.keys())})"
+    
+    
+
 class MeanTargetEncoder(object):
-    """missing doc"""
+    """Allows to apply Mean Target Encoding to categorical """
     def __init__(self, categoricals: List[str], target: str, alpha: int = 5):
-        self.mapper = dict()
+        self.mapper : Mapper = Mapper()
         self.global_mean = None
         self.categoricals = categoricals
         self.target = target
@@ -41,7 +58,7 @@ class MeanTargetEncoder(object):
 
             # Calculate smoothed mean target statistics
             train_statistics = (category_sum + self.global_mean * self.alpha) / (category_size + self.alpha)
-            self.mapper[col] = train_statistics.to_dict()
+            self.mapper.add_map(col, train_statistics.to_dict())
             self.status = 'fitted'
 
     def transform(self, df, suffix='_') -> pd.DataFrame:
