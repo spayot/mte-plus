@@ -1,12 +1,14 @@
+"""
+Defines the CategoricalEncoder Interface as well as the MeanTargetEncoder implementation.
+"""
+from abc import ABC, abstractmethod
 from typing import List, Optional, Dict
 
 import pandas as pd
 
 class Mapper:
-    def __init__(self, ):
-        """a Mapper object.
+    """a Mapper object.
         each attribute"""
-        
     def add_map(self, column: str, map: Dict[str, float]) -> None:
         setattr(self, column, map)
         
@@ -16,9 +18,28 @@ class Mapper:
     def __repr__(self) -> str:
         return f"Mapper(cols={list(self.__dict__.keys())})"
     
+
+class CategoricalEncoder(ABC):
+    """Abstract class for categorical encoders"""
+    suffix: str = '_'
+    @abstractmethod
+    def get_params(self, deep: bool):
+        pass
+    
+    @abstractmethod
+    def fit(self, df: pd.DataFrame, y: Optional[pd.Series] = None) -> None:
+        pass
+    
+    @abstractmethod
+    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
+        pass
+    
+    @abstractmethod
+    def fit_transform(self, df: pd.DataFrame) -> pd.DataFrame:
+        pass
     
 
-class MeanTargetEncoder(object):
+class MeanTargetEncoder(CategoricalEncoder):
     """Allows to apply Mean Target Encoding to categorical """
     def __init__(self, categoricals: List[str], target: str, alpha: int = 5):
         self.mapper : Mapper = Mapper()
@@ -61,25 +82,24 @@ class MeanTargetEncoder(object):
             self.mapper.add_map(col, train_statistics.to_dict())
             self.status = 'fitted'
 
-    def transform(self, df, suffix='_') -> pd.DataFrame:
+    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
         """returns a dataframe similar to the input df, but augmented with
         mean-target encoded categorical features, as """
         assert self.status == 'fitted', "model not fitted"
         output = pd.DataFrame()
         for col, train_statistics in self.mapper.items():
-            output[col + suffix] = df[col].map(train_statistics).fillna(self.global_mean)
+            output[col + self.suffix] = df[col].map(train_statistics).fillna(self.global_mean)
         return output
 
     def fit_transform(self, df: pd.DataFrame,
-                      y: Optional[pd.Series] = None,
-                      suffix: Optional[str] = '_') -> pd.DataFrame:
+                      y: Optional[pd.Series] = None) -> pd.DataFrame:
         """fit and transform the data in one go."""
         self.fit(df, y)
-        return self.transform(df, suffix)
+        return self.transform(df)
 
-    def get_feature_names(self, suffix='_'):
+    def get_feature_names(self):
         """Note: necessary method to integrate within Pipeline """
-        return [cat + suffix for cat in self.categoricals]
+        return [cat + self.suffix for cat in self.categoricals]
 
     def __repr__(self):
-        return f"MeanTargetEncoder(target={self.target}, status={self.status})"
+        return f"MeanTargetEncoder(target={self.target}, alpha={self.alpha})"
