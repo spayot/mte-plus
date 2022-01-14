@@ -6,6 +6,8 @@ from typing import List, Optional, Dict
 
 import pandas as pd
 
+from . import feature_selection
+
 class Mapper:
     """a Mapper object.
         each attribute"""
@@ -41,18 +43,21 @@ class CategoricalEncoder(ABC):
 
 class MeanTargetEncoder(CategoricalEncoder):
     """Allows to apply Mean Target Encoding to categorical """
-    def __init__(self, categoricals: List[str], target: str, alpha: int = 5):
+    def __init__(self, 
+                 features: feature_selection.FeatureSelection, 
+                 alpha: int = 5):
         self.mapper : Mapper = Mapper()
         self.global_mean = None
-        self.categoricals = categoricals
-        self.target = target
+        self.features = features
+        self.categoricals = features.categoricals
+        self.target = features.target
         self.status = 'not_fitted'
         self.alpha = alpha
 
     def get_params(self, deep: bool):
         """returns the parameters used to initialize this MTE object.
         Note: this method is necessary to integrate MTE into a sklearn Pipeline."""
-        return {'categoricals': self.categoricals, 'target': self.target, 'alpha': self.alpha}
+        return {'features': self.features, 'alpha': self.alpha}
 
     def fit(self, df: pd.DataFrame, y: Optional[pd.Series] = None):
         """creates a mapper object. The mapper is a nested dictionary

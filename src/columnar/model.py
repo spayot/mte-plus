@@ -1,7 +1,11 @@
 """
-Defines the Trainer Class
+Defines the CategoricalPipeline Class, which allows to define a 4-steps pipeline for structured columnar datasets:
+- feature selection: defining the target column as well as categorical and numerical columns to use as features for prediction
+- categorical encoder: transforms categorical data into numerical ones
+- scaler (optional): rescales the data
+- model : a classifier to apply to the dataset.
 """
-from typing import Callable, List, Optional, Tuple
+from typing import Callable, List, Optional, Tuple, Any
 
 
 import numpy as np
@@ -10,8 +14,9 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.base import BaseEstimator, TransformerMixin, clone
 
-from . import encoder, report, feature_selection
+from . import encoder, feature_selection
 
+Config = dict[str, str]
 
 class CategoricalPipeline:
     """a pipeline including feature selection, categorical encoding,
@@ -67,7 +72,7 @@ class CategoricalPipeline:
         
     
     @property
-    def config(self):
+    def config(self) -> Config:
         """returns a dictionary with the Pipeline's attributes turned into
         strings"""
         return {k: str(v) for k,v in self.__dict__.items()}
