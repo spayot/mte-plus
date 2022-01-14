@@ -13,17 +13,18 @@ Provides various census features about individuals and aims to predict whether a
 #### Prediction Task
 Predict whether an adult's income is higher or lower than $50k, using census information
 
-## Install Requirements
-`conda install -n <name> -f conda.yaml`
-
-## Reproducing Experiments
-check out the [notebooks/modeling](notebooks/modeling.ipynb).
-
-## Main Findings
+## 3. Main Findings
 ![](figures/model_encoder_comparison.png)
 Mean Target Encoding seem to be the most resilient encoding strategy to classifer choices and performs best with 2 out of the 3 classifier choices.
 
-# Next Steps
-- Perform comparison on other classification tasks
-- Add a third type of classifiers
-- **Categorical data embeddings** is a potentially more expressive generalization of MTE which represents each categorical value as an embedding. embeddings sizes can be defined based on the cardinality of each feature. An embedding of size 1 should replicate closely the principle of MTE (even though values are learnt more indireclty), but weights are learnt instead of explicitly defined.
+## 4. Install Requirements
+`conda install -n <name> -f conda.yaml`
+
+## 5. Reproducing Experiments
+check out the [notebooks/modeling](notebooks/modeling.ipynb).
+
+## 6. Next Steps
+
+- [x] Add a fourth type of classifiers (K-nearest neighbors)
+- [ ] Perform comparison on other classification tasks
+- [ ] **Categorical data embeddings** is a potentially more expressive generalization of MTE which represents each categorical value as an embedding. embeddings sizes can be defined based on the cardinality of each feature. An embedding of size 1 should replicate closely the principle of MTE (even though values are learnt more indireclty), but weights are learnt instead of explicitly defined.
