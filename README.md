@@ -47,7 +47,7 @@ This command will generate:
 Both new artifacts are named after the prediction task used to evaluate the pipelines.
 
 ### 5.2 the Notebook way
-check out the [notebooks/modeling](notebooks/modeling.ipynb).
+check out the [notebooks/adult](notebooks/adult.ipynb).
 
 ---
 ## 6. Next Steps
