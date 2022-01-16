@@ -69,6 +69,10 @@ class Report:
     def score(self, y_test: np.ndarray, y_preds: np.ndarray) -> pd.Series:
         return self.scorer.score(y_test, y_preds)
     
+    def save(self, path: Path) -> None:
+        """save report to csv"""
+        self.report.to_csv(path, index=False, sep=';')
+    
     
     def __repr__(self) -> str:
         return f"""Report(
@@ -76,3 +80,13 @@ class Report:
         to_show: [{','.join(self.columns_to_show)}]
         )"""
     
+
+    
+def _get_class_name_from_string(string : str) -> str:
+    """extracts class name from a repr of an instance.
+    Example: 
+    >>> s = "RandomForestRegressor(n_estimators=100)"
+    >>> _get_class_name_from_string(s)
+    "RandomForestRegressor"
+    """
+    return re.match('[A-Za-z]+', string).group(0)

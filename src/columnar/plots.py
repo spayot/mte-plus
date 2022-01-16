@@ -4,7 +4,7 @@ from typing import Optional
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from . import report
+from . import report, model
 
 def plot_model_encoder_pairs(reporter: report.Report, 
                              metrics: list[str] = None, 
@@ -23,6 +23,8 @@ def plot_model_encoder_pairs(reporter: report.Report,
         # get std dev of this metric across cross validation
         err = pd.pivot(reporter.report, index='model', columns='encoder', values=metric + '-std')
         
+        summary = _clean_index_column_names(summary)
+        
         for table in [summary, err]:
             # clean up column and index names
             table.columns = [_get_class_name_from_string(col) for col in table.columns]
@@ -33,7 +35,9 @@ def plot_model_encoder_pairs(reporter: report.Report,
         ax.set_title(metric.upper())
     
     if figpath is not None:
-        plt.savefig(figpath, transparent=False, facecolor='black');
+        plt.savefig(figpath, transparent=False, facecolor='white');
+        
+    plt.show()
         
         
 def _get_class_name_from_string(string : str) -> str:
@@ -44,5 +48,20 @@ def _get_class_name_from_string(string : str) -> str:
     "RandomForestRegressor"
     """
     return re.match('[A-Za-z]+', string).group(0)
+
+def _clean_index_column_names(df: pd.DataFrame) -> None:
+    table = df.copy()
+    table.columns = [_get_class_name_from_string(col) for col in table.columns]
+    table.index = [_get_class_name_from_string(idx) for idx in table.index]
+    
+    return table
     
     
+    
+    
+def plot_feature_importance(pipe: model.CategoricalPipeline, *args, **kwargs):
+    fi = (pd.Series(pipe.model.feature_importances_, 
+                   index=pipe.features.categoricals + pipe.features.numericals)
+          .sort_values())
+    fi.plot.barh(*args, **kwargs)
+    plt.show()

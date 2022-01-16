@@ -1,19 +1,22 @@
 """
 defines process to load Adults dataset and select features to fit a classifier on.
 """
+import os
+
 import numpy as np
 import pandas as pd
 
 
 from ..feature_selection import FeatureSelection
 
-DATA_PATH = '../data/adults/adult.data'
+DATASET_PATH = 'data/adults/adult.data'
 
-def _load() -> pd.DataFrame:
+def _load(root_path: str) -> pd.DataFrame:
     """load Adults dataset and transform columns as needed"""
+    path = os.path.join(root_path, DATASET_PATH)
     COL_NAMES = ['age', 'workclass', 'fnlwgt', 'education', 'education_num', 'marital-status', 'occupation',
              'relationship', 'race', 'sex', 'capital_gain', 'capital_loss', 'hours-per-week', 'native-country', 'income']
-    df = pd.read_csv(DATA_PATH, header=None)
+    df = pd.read_csv(path, header=None)
     df.columns = COL_NAMES
     df['target'] = (df.income.str.strip() == '>50K')
     

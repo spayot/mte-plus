@@ -3,7 +3,7 @@
 **Mean Target Encoding (MTE)** is a technique to transform categorical data into numerical by replacing the categorical value by the mean target value for all observations belonging to that category.  The goal of this project is to benchmark the performance of mean target encoding  against multiple encoding strategies for categorical variables in a structured dataset task.  
 The benchmark is run across multiple classification tasks, and considers multiple types of downstream classifiers. Scoring is focused on F1-score and AUC.
 
-## 2. Datasets
+## 2. Tasks
 
 ### 2.1 Adult Dataset
 #### Description
@@ -14,13 +14,22 @@ Provides various census features about individuals and aims to predict whether a
 Predict whether an adult's income is higher or lower than $50k, using census information
 
 ## 3. Main Findings
-![](figures/model_encoder_comparison.png)
-Mean Target Encoding seem to be the most resilient encoding strategy to classifer choices and performs best with 2 out of the 3 classifier choices.
+**Adult** ![adults](figures/adults.png)
+Mean Target Encoding seem to be the most resilient encoding strategy to classifer choices and performs best with 2 out of the 4 classifier choices.
 
 ## 4. Install Requirements
 `conda install -n <name> -f conda.yaml`
 
 ## 5. Reproducing Experiments
+### 5.1 through Scripts
+Any classification task can be used to compare encoder/model pairs as long as the dataset is made available in the `data/` folder, and an identically named python file is added in `src/loaders`. this file must include 2 functions:
+- `_load` describes the steps to load the dataset in memory
+- `_select_features(df)` builds a FeatureSelection object describing which features will be fed into the classifier, which ones are categorical, and which column corresponds to the target.
+
+Once this is done, the user can simply run the `python main.py --task <task_name>` command.
+this will generate a CSV report in the `runs/` folder, as well as a summary figure, both named after the task.
+
+### 5.2 the Notebook way
 check out the [notebooks/modeling](notebooks/modeling.ipynb) or run `python main.py`.
 
 ## 6. Next Steps

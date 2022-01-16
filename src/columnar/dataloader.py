@@ -11,23 +11,19 @@ from .feature_selection import FeatureSelection
 
 DataLoadingFunc = Callable[[], pd.DataFrame]
 
-# each factory is defined by a tuple of callables. 
-# the first is downloading the data
-# FACTORY = {
-#     'adults': (_load, _select),
-# }
 
 @dataclass
 class DataLoader:
-    root: str
+    task: str # the task name
+    root: str = 'data/'# the root path to data
     
     def __post_init__(self):
         # load_func, select_features = FACTORY.get(self.root)
-        self._load = eval(f"loaders.{self.root}._load")
-        self._select_features = eval(f"loaders.{self.root}._select_features")
+        self._load = eval(f"loaders.{self.task}._load")
+        self._select_features = eval(f"loaders.{self.task}._select_features")
     
     def load_data(self) -> pd.DataFrame:
-        return self._load()
+        return self._load(self.root)
     
     def get_selected_features(self, df: pd.DataFrame) -> FeatureSelection:
         return self._select_features(df)
