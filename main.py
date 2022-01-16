@@ -38,7 +38,7 @@ def main(args):
     kf = KFold(n_splits=5)
     
     # define features to select
-    feature_selection = loader.get_selected_features(df)
+    feature_selection = col.FeatureSelection(**loader.get_selected_features(df))
     
     reporter = col.Report(scorer=scorer)
     reporter.set_columns_to_show(['model', 'encoder'] + list(scorer.scoring_fcts.keys()))
@@ -73,11 +73,14 @@ def main(args):
             reporter.add_to_report(pipe.config, cv_score, show=False)
     
     # saving report as csv
-    reporter.save(os.path.join(ROOT_PATH, f'runs/{args.task}.csv'))
+    save_path = f'runs/{args.task}.csv'
+    reporter.save(os.path.join(ROOT_PATH, save_path))
+    print(f"results summary saved in {save_path}")
+    
     # saving summary plot model
     figpath = f'figures/{args.task}.png'
-    col.plot_model_encoder_pairs(reporter, figpath=figpath)
-    print(f"results saved in {figpath}")
+    col.plot_model_encoder_pairs(reporter, figpath=figpath, title=f"{args.task} dataset".capitalize())
+    print(f"visualization saved in {figpath}")
             
         
 

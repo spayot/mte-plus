@@ -2,12 +2,11 @@
 Factory for loading datasets. the factory defines the processes to download the data on disk, load the data in memory in a dataframe and select the features to use to fit the classification model.
 """
 from dataclasses import dataclass
-from typing import Callable
+from typing import Callable, Any
 
 import pandas as pd
 
 from . import loaders
-from .feature_selection import FeatureSelection
 
 DataLoadingFunc = Callable[[], pd.DataFrame]
 
@@ -25,6 +24,8 @@ class DataLoader:
     def load_data(self) -> pd.DataFrame:
         return self._load(self.root)
     
-    def get_selected_features(self, df: pd.DataFrame) -> FeatureSelection:
+    def get_selected_features(self, df: pd.DataFrame) -> dict[str, Any]:
+        """returns a dictionary with 3 keys: categoricals, numericals and target.
+        this dictionary can be passed as arguments for a FeatureSelection object"""
         return self._select_features(df)
         

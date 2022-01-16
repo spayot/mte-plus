@@ -2,6 +2,7 @@
 defines process to load Adults dataset and select features to fit a classifier on.
 """
 import os
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -23,13 +24,13 @@ def _load(root_path: str) -> pd.DataFrame:
     return df
     
     
-def _select_features(df: pd.DataFrame) -> FeatureSelection:
+def _select_features(df: pd.DataFrame) -> dict[str, Any]:
     numericals = df.select_dtypes(np.number).columns.tolist()
     categoricals = df.select_dtypes('object').columns.tolist()
     categoricals.remove('income')
 
     # select features to use in the model
-    feature_selection = FeatureSelection(
+    feature_selection = dict(
         categoricals=categoricals,
         numericals=numericals,
         target= 'target')

@@ -8,7 +8,9 @@ from . import report, model
 
 def plot_model_encoder_pairs(reporter: report.Report, 
                              metrics: list[str] = None, 
-                             figpath: Optional[str] = None) -> None:
+                             figpath: Optional[str] = None,
+                             title: Optional[str] = None,
+                            ) -> None:
     """plots metrics"""
     if metrics is None:
         metrics = list(reporter.scorer.scoring_fcts.keys())
@@ -33,6 +35,12 @@ def plot_model_encoder_pairs(reporter: report.Report,
         ax.set_ylim([0.5,1])
         ax.set_xticklabels(summary.index, rotation=0)
         ax.set_title(metric.upper())
+        ax.get_legend().remove()
+        
+    handles, labels = ax.get_legend_handles_labels()
+    fig.legend(handles, labels, loc='upper left')
+    if title is not None:
+        fig.suptitle(title, y=1.1)
     
     if figpath is not None:
         plt.savefig(figpath, transparent=False, facecolor='white');
