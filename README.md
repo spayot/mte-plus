@@ -1,4 +1,4 @@
-# Testing Mean Target Encoding vs categorical data embeddings
+# Benchmark Mean Target Encoding against other Categorical Data Encoding Techniques
 ## 1. Goal
 **Mean Target Encoding (MTE)** is a technique to transform categorical data into numerical by replacing the categorical value by the mean target value for all observations belonging to that category.  The goal of this project is to benchmark the performance of mean target encoding  against multiple encoding strategies for categorical variables in a structured dataset task.  
 The benchmark is run across multiple classification tasks, and considers multiple types of downstream classifiers. Scoring is focused on Accuracy, F1-score and AUC.
@@ -47,7 +47,7 @@ This command will generate:
 Both new artifacts are named after the prediction task used to evaluate the pipelines.
 
 ### 5.2 the Notebook way
-check out the [notebooks/adult](notebooks/adult.ipynb).
+check out [notebooks/adult](notebooks/adult.ipynb).
 
 ---
 ## 6. Next Steps
