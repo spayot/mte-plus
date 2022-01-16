@@ -2,6 +2,7 @@
 ## 1. Goal
 **Mean Target Encoding (MTE)** is a technique to transform categorical data into numerical by replacing the categorical value by the mean target value for all observations belonging to that category.  The goal of this project is to benchmark the performance of mean target encoding  against multiple encoding strategies for categorical variables in a structured dataset task.  
 The benchmark is run across multiple classification tasks, and considers multiple types of downstream classifiers. Scoring is focused on Accuracy, F1-score and AUC.
+
 ---
 ## 2. Tasks
 
@@ -16,15 +17,18 @@ Aims to predict whether a mushroom is poisonous given 23 categorical descriptors
 ### 2.3 Titanic Dataset
 Aims to predict whether a Titanic passenger survived given a few descriptors. only some minimal imputing and feature engineering was performed.
 [https://www.kaggle.com/uciml/mushroom-classification#](https://www.kaggle.com/uciml/mushroom-classification#)
+
 ---
 ## 3. Main Findings
 **Adult Task** ![](figures/adults.png)
 **Mushrooms Task** ![](figures/mushrooms.png)
 **Titanic Task** ![](figures/titanic.png)
 Mean Target Encoding seem to be the most resilient encoding strategy to classifer choices and performs best with 2 out of the 4 classifier choices.
+
 ---
 ## 4. Install Requirements
 `conda install -n <name> -f conda.yaml`
+
 ---
 ## 5. Reproducing Experiments
 ### 5.1 through Scripts
@@ -44,6 +48,7 @@ Both new artifacts are named after the prediction task used to evaluate the pipe
 
 ### 5.2 the Notebook way
 check out the [notebooks/modeling](notebooks/modeling.ipynb).
+
 ---
 ## 6. Next Steps
 
