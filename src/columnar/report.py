@@ -32,12 +32,19 @@ class Report:
     
     def add_to_report(self, 
                       config: model.Config, 
-                      results: pd.Series, 
+                      results: pd.DataFrame, 
                       show: bool = True) -> None:
         """add an entry to the report. each entry is defined by a config and a 
         set of results from the reports scorer"""
         data = config.copy()
-        data.update(results.to_dict())
+        # add mean values
+        data.update(results.mean().to_dict())
+        
+        # add std deviation
+        stds = results.std().to_dict()
+        data.update({k + '-std': v for k, v in stds.items()})
+        
+        # add to report
         self.report = self.report.append(data, ignore_index=True)
         
         if show:

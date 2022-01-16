@@ -1,7 +1,8 @@
-from . import model, encoder, feature_selection, report, plots
+from . import model, encoder, feature_selection, report, plots, dataloader, loaders
 from .feature_selection import FeatureSelection
 from .encoder import MeanTargetEncoder
 from .model import CategoricalPipeline
 from .report import Report
 from .score import Scorer, cv_score
 from .plots import plot_model_encoder_pairs
+from .dataloader import DataLoader

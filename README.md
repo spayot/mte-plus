@@ -21,10 +21,13 @@ Mean Target Encoding seem to be the most resilient encoding strategy to classife
 `conda install -n <name> -f conda.yaml`
 
 ## 5. Reproducing Experiments
-check out the [notebooks/modeling](notebooks/modeling.ipynb).
+check out the [notebooks/modeling](notebooks/modeling.ipynb) or run `python main.py`.
 
 ## 6. Next Steps
 
-- [x] Add a fourth type of classifiers (K-nearest neighbors)
+- [x] Add a fourth type of classifiers (LightGBM)
 - [ ] Perform comparison on other classification tasks
+  - [ ] refactor data loading process into a factory pattern
+  - [ ] create a main function taking as input a dataset
+  - [ ] add new datasets and compare performances
 - [ ] **Categorical data embeddings** is a potentially more expressive generalization of MTE which represents each categorical value as an embedding. embeddings sizes can be defined based on the cardinality of each feature. An embedding of size 1 should replicate closely the principle of MTE (even though values are learnt more indireclty), but weights are learnt instead of explicitly defined.

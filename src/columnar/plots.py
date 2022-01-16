@@ -13,16 +13,21 @@ def plot_model_encoder_pairs(reporter: report.Report,
     if metrics is None:
         metrics = list(reporter.scorer.scoring_fcts.keys())
     
+    
     # create figure
     fig, axs = plt.subplots(1, len(metrics), figsize=(len(metrics) * 10,5))
     for ax, metric in zip(axs, metrics):
-        # create summary view 
-        summary = pd.pivot(reporter.show(), index='model', columns='encoder', values=metric)
+        # create summary view for mean value of this metric during cross validation
+        summary = pd.pivot(reporter.report, index='model', columns='encoder', values=metric)
         
-        # clean up column and index names
-        summary.columns = [_get_class_name_from_string(col) for col in summary.columns]
-        summary.index = [_get_class_name_from_string(idx) for idx in summary.index]
-        summary.plot.bar(ax=ax)
+        # get std dev of this metric across cross validation
+        err = pd.pivot(reporter.report, index='model', columns='encoder', values=metric + '-std')
+        
+        for table in [summary, err]:
+            # clean up column and index names
+            table.columns = [_get_class_name_from_string(col) for col in table.columns]
+            table.index = [_get_class_name_from_string(idx) for idx in table.index]
+        summary.plot.bar(ax=ax, yerr=err)
         ax.set_ylim([0.5,1])
         ax.set_xticklabels(summary.index, rotation=0)
         ax.set_title(metric.upper())
