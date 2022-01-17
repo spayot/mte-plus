@@ -24,7 +24,7 @@ https://www.kaggle.com/arashnic/hr-analytics-job-change-of-data-scientists
 
 ---
 ## 3. Benchmarking strategy
-A ML Pipeline is built with each encoder / model pairs, and trained on the task at hand. Evaluation is performed through a 5-fold cross validation strategy, to extract mean and std dev values for each metric of interest.   
+A ML Pipeline is built with each categorical encoder / classifier pairs, and trained on the task at hand. Evaluation is performed through a 5-fold cross validation strategy, to extract mean and std dev values for each metric of interest.   
 **Pipeline Overview**![](figures/pipeline.png)
 *`*` sklearn component*  *`**` LightGBM component*  
 *other components were built specifically for this project (cf [src/columnar](src/columar))*
