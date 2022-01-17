@@ -29,8 +29,8 @@ def main(args):
     
     # define scoring metrics of interest
     scorer = col.Scorer(
-        acc=metrics.accuracy_score,
-        f1=metrics.f1_score,
+        acc=lambda x, y: metrics.accuracy_score(x,y>.5),
+        f1=lambda x, y: metrics.f1_score(x,y>.5),
         auc=metrics.roc_auc_score,
     )
 

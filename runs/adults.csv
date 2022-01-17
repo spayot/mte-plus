@@ -9,7 +9,7 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'race', 'sex',
                                                    'native-country'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.8530145954547151;0.6302494213200993;0.7393993800384298;0.004935622142805335;0.01152453276983207;0.006218992539766722
+                ('clf', RandomForestClassifier(max_depth=5))])";0.8527380930824044;0.6314407597044561;0.9081586931183825;0.002989512336644149;0.0109076421786583;0.0040451682069867845
 FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country'], numericals=['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours-per-week'], target='target');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();RandomForestClassifier(max_depth=5);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -20,7 +20,7 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'race', 'sex',
                                                    'native-country'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.8381807119082568;0.5485590354042004;0.6914887531677414;0.0024834510209251113;0.010942298273527891;0.005797793025857619
+                ('clf', RandomForestClassifier(max_depth=5))])";0.838272877793836;0.5533723785324268;0.8976563174329248;0.003171321507761149;0.0134593539889789;0.004339348360032658
 FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country'], numericals=['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours-per-week'], target='target');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();RandomForestClassifier(max_depth=5);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -32,7 +32,7 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'race', 'sex',
                                                    'native-country'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.8501275798431488;0.6160866310913333;0.7304217570055878;0.0028478555228869658;0.009722230747863924;0.005444801206922903
+                ('clf', RandomForestClassifier(max_depth=5))])";0.8506497541677183;0.6176904135529145;0.9030226007270062;0.004094453101367496;0.009092190353984926;0.0037698806253815783
 FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country'], numericals=['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours-per-week'], target='target');MeanTargetEncoder(target=target, alpha=5);MaxAbsScaler();LogisticRegression(max_iter=500);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -43,7 +43,7 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'race', 'sex',
                                                    'native-country'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', LogisticRegression(max_iter=500))])";0.8454286805334709;0.6399193185359489;0.7515598663901689;0.0022886302906133926;0.008060814383823067;0.004671606196206253
+                ('clf', LogisticRegression(max_iter=500))])";0.8454286805334709;0.6399193185359489;0.8997642786537646;0.0022886302906133926;0.008060814383823067;0.004035397347937098
 FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country'], numericals=['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours-per-week'], target='target');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();LogisticRegression(max_iter=500);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -54,7 +54,7 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'race', 'sex',
                                                    'native-country'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', LogisticRegression(max_iter=500))])";0.8502196702795505;0.6566537522194996;0.7630412710716069;0.003911970436858976;0.010580966368419459;0.005571132028155951
+                ('clf', LogisticRegression(max_iter=500))])";0.8502196702795505;0.6566537522194996;0.9044975994381442;0.003911970436858976;0.010580966368419459;0.004681299180315723
 FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country'], numericals=['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours-per-week'], target='target');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();LogisticRegression(max_iter=500);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -66,7 +66,7 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'race', 'sex',
                                                    'native-country'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', LogisticRegression(max_iter=500))])";0.8229784383227496;0.545480639052054;0.692626664383915;0.0014253615920769886;0.0034475543791673054;0.001554723583165597
+                ('clf', LogisticRegression(max_iter=500))])";0.8229784383227496;0.545480639052054;0.8518276496907561;0.0014253615920769886;0.0034475543791673054;0.007810263696293041
 FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country'], numericals=['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours-per-week'], target='target');MeanTargetEncoder(target=target, alpha=5);MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -77,7 +77,7 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'race', 'sex',
                                                    'native-country'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.835877437149892;0.6086220405147251;0.7314721395897383;0.003446822419789286;0.009795541349643359;0.005434791544916987
+                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.835877437149892;0.6086220405147251;0.8749241328432232;0.003446822419789286;0.009795541349643359;0.0028126730289611606
 FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country'], numericals=['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours-per-week'], target='target');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -88,7 +88,7 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'race', 'sex',
                                                    'native-country'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.8300115371223156;0.5988939552467304;0.7266272022073752;0.004178080203871286;0.013029652383158986;0.007535331808849697
+                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.8300115371223156;0.5988939552467304;0.8663463350664052;0.004178080203871286;0.013029652383158986;0.004835438080201718
 FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country'], numericals=['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours-per-week'], target='target');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -100,7 +100,7 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'race', 'sex',
                                                    'native-country'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.8300116455805078;0.5944831616801698;0.7233547553855376;0.005333138364545131;0.01551134755451793;0.008920557912317231
+                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.8300116455805078;0.5944831616801698;0.8668274057397142;0.005333138364545131;0.01551134755451793;0.003090835745280442
 FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country'], numericals=['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours-per-week'], target='target');MeanTargetEncoder(target=target, alpha=5);MaxAbsScaler();LGBMClassifier();"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -110,7 +110,7 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'occupation', 'relationship',
                                                    'race', 'sex',
                                                    'native-country'])])),
-                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.8720555628489759;0.7107771270800393;0.7973034523863675;0.0012588367430623067;0.006574138904441795;0.004887489148326347
+                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.8720555628489759;0.7107771270800393;0.9278658188709354;0.0012588367430623067;0.006574138904441795;0.0023448942619947906
 FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country'], numericals=['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours-per-week'], target='target');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();LGBMClassifier();"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -120,7 +120,7 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'occupation', 'relationship',
                                                    'race', 'sex',
                                                    'native-country'])])),
-                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.8736833316923137;0.7153545054939493;0.8005076016371717;0.002613044997564635;0.007724520269553137;0.005506955440139698
+                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.8736833316923137;0.7153545054939493;0.9284015211406601;0.002613044997564635;0.007724520269553137;0.001846671038463464
 FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'native-country'], numericals=['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours-per-week'], target='target');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();LGBMClassifier();"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -131,4 +131,4 @@ FeatureSelection(categoricals=['workclass', 'education', 'marital-status', 'occu
                                                    'occupation', 'relationship',
                                                    'race', 'sex',
                                                    'native-country'])])),
-                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.8731611903767593;0.7141831610778255;0.7997540335130504;0.0026680224053465614;0.0065240566079071026;0.0033413622132323446
+                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.8731611903767593;0.7141831610778255;0.927786337504225;0.0026680224053465614;0.0065240566079071026;0.002531572409427082

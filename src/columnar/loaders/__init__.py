@@ -1,1 +1,1 @@
-from . import adults, mushrooms, titanic
+from . import adults, mushrooms, titanic, hr_analytics

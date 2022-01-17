@@ -19,7 +19,7 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'population',
                                                    'habitat'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.9897840090943539;0.9746116012727455;0.9937049674517011;0.019852986993836436;0.051992894692989074;0.011907814001884917
+                ('clf', RandomForestClassifier(max_depth=5))])";0.9897840090943539;0.9746116012727455;0.9996655248008703;0.019852986993836436;0.051992894692989074;0.0005589033232361512
 FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises', 'odor', 'gill_attachment', 'gill_spacing', 'gill_size', 'gill_color', 'stalk_shape', 'stalk_root', 'stalk_surface_above_ring', 'stalk_surface_below_ring', 'stalk_color_above_ring', 'stalk_color_below_ring', 'veil_type', 'veil_color', 'ring_number', 'ring_type', 'spore_print_color', 'population', 'habitat'], numericals=[], target='class_ep');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();RandomForestClassifier(max_depth=5);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -40,7 +40,7 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'population',
                                                    'habitat'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.9798147783251231;0.9682611961831397;0.9879312869714211;0.0237791727964135;0.04942299001794808;0.01368249007202108
+                ('clf', RandomForestClassifier(max_depth=5))])";0.9827686244789693;0.9666648248874559;0.9969768266348664;0.02285597400979452;0.05989594007539622;0.0067600211522055274
 FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises', 'odor', 'gill_attachment', 'gill_spacing', 'gill_size', 'gill_color', 'stalk_shape', 'stalk_root', 'stalk_surface_above_ring', 'stalk_surface_below_ring', 'stalk_color_above_ring', 'stalk_color_below_ring', 'veil_type', 'veil_color', 'ring_number', 'ring_type', 'spore_print_color', 'population', 'habitat'], numericals=[], target='class_ep');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();RandomForestClassifier(max_depth=5);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -62,7 +62,7 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'population',
                                                    'habitat'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.9796917014020462;0.9622449743257306;0.9864309325980365;0.021405642598453675;0.05050236916027236;0.014596903154815362
+                ('clf', RandomForestClassifier(max_depth=5))])";0.9727993937097386;0.956051402512147;0.9973199160792164;0.023026495403600095;0.05306252101319721;0.005953444144776424
 FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises', 'odor', 'gill_attachment', 'gill_spacing', 'gill_size', 'gill_color', 'stalk_shape', 'stalk_root', 'stalk_surface_above_ring', 'stalk_surface_below_ring', 'stalk_color_above_ring', 'stalk_color_below_ring', 'veil_type', 'veil_color', 'ring_number', 'ring_type', 'spore_print_color', 'population', 'habitat'], numericals=[], target='class_ep');MeanTargetEncoder(target=class_ep, alpha=5);MaxAbsScaler();LogisticRegression(max_iter=500);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -83,7 +83,7 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'population',
                                                    'habitat'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', LogisticRegression(max_iter=500))])";0.9853530125047367;0.971477020153362;0.9908044856194286;0.019310301111373586;0.05119936926160371;0.01137745438536721
+                ('clf', LogisticRegression(max_iter=500))])";0.9853530125047367;0.971477020153362;0.9942039553827451;0.019310301111373586;0.05119936926160371;0.012479442301416377
 FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises', 'odor', 'gill_attachment', 'gill_spacing', 'gill_size', 'gill_color', 'stalk_shape', 'stalk_root', 'stalk_surface_above_ring', 'stalk_surface_below_ring', 'stalk_color_above_ring', 'stalk_color_below_ring', 'veil_type', 'veil_color', 'ring_number', 'ring_type', 'spore_print_color', 'population', 'habitat'], numericals=[], target='class_ep');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();LogisticRegression(max_iter=500);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -104,7 +104,7 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'population',
                                                    'habitat'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', LogisticRegression(max_iter=500))])";0.9871989389920424;0.9780332267821634;0.9916049152003307;0.014149440177350625;0.03404181936809689;0.008255446122139345
+                ('clf', LogisticRegression(max_iter=500))])";0.9871989389920424;0.9780332267821634;0.9993796108178227;0.014149440177350625;0.03404181936809689;0.0008546961512273396
 FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises', 'odor', 'gill_attachment', 'gill_spacing', 'gill_size', 'gill_color', 'stalk_shape', 'stalk_root', 'stalk_surface_above_ring', 'stalk_surface_below_ring', 'stalk_color_above_ring', 'stalk_color_below_ring', 'veil_type', 'veil_color', 'ring_number', 'ring_type', 'spore_print_color', 'population', 'habitat'], numericals=[], target='class_ep');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();LogisticRegression(max_iter=500);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -126,7 +126,7 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'population',
                                                    'habitat'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', LogisticRegression(max_iter=500))])";0.8353148162182645;0.7766058429330688;0.844882714192887;0.17831291256774867;0.23394922043538294;0.13226908311812854
+                ('clf', LogisticRegression(max_iter=500))])";0.8353148162182645;0.7766058429330688;0.8450324532803378;0.17831291256774867;0.23394922043538294;0.165431164646
 FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises', 'odor', 'gill_attachment', 'gill_spacing', 'gill_size', 'gill_color', 'stalk_shape', 'stalk_root', 'stalk_surface_above_ring', 'stalk_surface_below_ring', 'stalk_color_above_ring', 'stalk_color_below_ring', 'veil_type', 'veil_color', 'ring_number', 'ring_type', 'spore_print_color', 'population', 'habitat'], numericals=[], target='class_ep');MeanTargetEncoder(target=class_ep, alpha=5);MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -147,7 +147,7 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'population',
                                                    'habitat'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.9586406972338007;0.935072641265618;0.9550674932356789;0.04166388720596124;0.07909107316384732;0.04510291458295868
+                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.9586406972338007;0.935072641265618;0.9955170804615916;0.04166388720596124;0.07909107316384732;0.006186551457135238
 FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises', 'odor', 'gill_attachment', 'gill_spacing', 'gill_size', 'gill_color', 'stalk_shape', 'stalk_root', 'stalk_surface_above_ring', 'stalk_surface_below_ring', 'stalk_color_above_ring', 'stalk_color_below_ring', 'veil_type', 'veil_color', 'ring_number', 'ring_type', 'spore_print_color', 'population', 'habitat'], numericals=[], target='class_ep');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -168,7 +168,7 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'population',
                                                    'habitat'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.9702121258052292;0.9561051891435804;0.9665855406284443;0.03324916100772784;0.05237481422356197;0.034157465605157214
+                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.9702121258052292;0.9561051891435804;0.9981133035769283;0.03324916100772784;0.05237481422356197;0.0034105004520306507
 FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises', 'odor', 'gill_attachment', 'gill_spacing', 'gill_size', 'gill_color', 'stalk_shape', 'stalk_root', 'stalk_surface_above_ring', 'stalk_surface_below_ring', 'stalk_color_above_ring', 'stalk_color_below_ring', 'veil_type', 'veil_color', 'ring_number', 'ring_type', 'spore_print_color', 'population', 'habitat'], numericals=[], target='class_ep');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -190,7 +190,7 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'population',
                                                    'habitat'])])),
                 ('scale', MaxAbsScaler()),
-                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.9327848427434635;0.8927007079959491;0.9277380380861168;0.06391205249026764;0.1156279858977302;0.07985946763684162
+                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.9327848427434635;0.8927007079959491;0.9890486647830045;0.06391205249026764;0.1156279858977302;0.015718919658195125
 FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises', 'odor', 'gill_attachment', 'gill_spacing', 'gill_size', 'gill_color', 'stalk_shape', 'stalk_root', 'stalk_surface_above_ring', 'stalk_surface_below_ring', 'stalk_color_above_ring', 'stalk_color_below_ring', 'veil_type', 'veil_color', 'ring_number', 'ring_type', 'spore_print_color', 'population', 'habitat'], numericals=[], target='class_ep');MeanTargetEncoder(target=class_ep, alpha=5);MaxAbsScaler();LGBMClassifier();"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -210,7 +210,7 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'spore_print_color',
                                                    'population',
                                                    'habitat'])])),
-                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.9928575975748389;0.9873017950227923;0.9905913735650571;0.01399843782434745;0.022862252809314722;0.019818555967112607
+                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.9928575975748389;0.9873017950227923;0.9997466040358095;0.01399843782434745;0.022862252809314722;0.0004660914336532645
 FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises', 'odor', 'gill_attachment', 'gill_spacing', 'gill_size', 'gill_color', 'stalk_shape', 'stalk_root', 'stalk_surface_above_ring', 'stalk_surface_below_ring', 'stalk_color_above_ring', 'stalk_color_below_ring', 'veil_type', 'veil_color', 'ring_number', 'ring_type', 'spore_print_color', 'population', 'habitat'], numericals=[], target='class_ep');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();LGBMClassifier();"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -230,7 +230,7 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'spore_print_color',
                                                    'population',
                                                    'habitat'])])),
-                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.9945821902235696;0.9896261340059395;0.9962456357141104;0.008602818287770963;0.014581867469296057;0.006214609046407387
+                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.9945821902235696;0.9896261340059395;0.9998869894882567;0.008602818287770963;0.014581867469296057;0.00025269918643020607
 FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises', 'odor', 'gill_attachment', 'gill_spacing', 'gill_size', 'gill_color', 'stalk_shape', 'stalk_root', 'stalk_surface_above_ring', 'stalk_surface_below_ring', 'stalk_color_above_ring', 'stalk_color_below_ring', 'veil_type', 'veil_color', 'ring_number', 'ring_type', 'spore_print_color', 'population', 'habitat'], numericals=[], target='class_ep');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();LGBMClassifier();"Pipeline(steps=[('transform',
                  ColumnTransformer(remainder='passthrough',
                                    transformers=[('categories',
@@ -251,4 +251,4 @@ FeatureSelection(categoricals=['cap_shape', 'cap_surface', 'cap_color', 'bruises
                                                    'spore_print_color',
                                                    'population',
                                                    'habitat'])])),
-                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.9975372489579385;0.9953547382534854;0.9965476655218344;0.004266135047864599;0.007086817906703742;0.006920707013940713
+                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.9975372489579385;0.9953547382534854;0.9999738663191593;0.004266135047864599;0.007086817906703742;5.8436686861966915e-05

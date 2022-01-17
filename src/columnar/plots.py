@@ -32,7 +32,7 @@ def plot_model_encoder_pairs(reporter: report.Report,
             table.columns = [_get_class_name_from_string(col) for col in table.columns]
             table.index = [_get_class_name_from_string(idx) for idx in table.index]
         summary.plot.bar(ax=ax, yerr=err)
-        ax.set_ylim([0.5,1])
+        ax.set_ylim([0.3,1])
         ax.set_xticklabels(summary.index, rotation=0)
         ax.set_title(metric.upper())
         ax.get_legend().remove()

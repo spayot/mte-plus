@@ -53,12 +53,13 @@ class CategoricalPipeline:
         self.pipe.fit(X, y, *args, **kwargs)
         
     def predict(self, df: pd.DataFrame) -> np.ndarray:
-        """"""
+        """returns predicted probability for `target` to be true for each observation"""
         X, _ = self.features.select_features(df)
         
-        return self.pipe.predict(X)
+        return self.pipe.predict_proba(X)[:,1]
     
     def clone(self):
+        """allows to create a clone version of the same pipeline (ie reinitialize with same steps)"""
         cls = self.__class__
         encoder = None if self.encoder is None else clone(self.encoder)
         scaler = None if self.scaler is None else clone(self.scaler)
