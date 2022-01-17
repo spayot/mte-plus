@@ -30,7 +30,7 @@ A ML Pipeline is built with each encoder / model pairs, and trained on the task 
 *other components were built specifically for this project (cf [src/columnar](src/columar))*
 
 ---
-## 3. Main Findings
+## 4. Main Findings
 **Adult Task** ![](figures/adults.png)
 **Mushrooms Task** ![](figures/mushrooms.png)
 **Titanic Task** ![](figures/titanic.png)
@@ -38,12 +38,12 @@ A ML Pipeline is built with each encoder / model pairs, and trained on the task 
 Mean Target Encoding seem to be the most resilient encoding strategy to classifer choices and performs best with 2 out of the 4 classifier choices.
 
 ---
-## 4. Install Requirements
+## 5. Install Requirements
 `conda install -n <name> -f conda.yaml`
 
 ---
-## 5. Reproducing Experiments
-### 5.1 through Scripts
+## 6. Reproducing Experiments
+### 6.1 through Scripts
 the user can simply run the following command:  
   
   `python main.py --task <task_name>`  
@@ -53,11 +53,11 @@ This command will evaluate the performance of various encoder / classifier combi
 - a summary figure in the `figures/` folder.
 Both new artifacts are named after the prediction task used to evaluate the pipelines.
 
-### 5.2 the Notebook way
+### 6.2 the Notebook way
 check out [notebooks/adult](notebooks/adult.ipynb).
 
 ---
-## 6. Benchmarking using a new task
+## 7. Benchmarking using a new task
 Any binary classification task can be used to evaluate encoder/model pairs as long as the dataset is made available in the `data/` folder, and an identically named python file is added in `src/columnar/loaders`. this file must include 2 functions:
 - `_load` describes the steps to load the dataset in memory
 - `_select_features(df)` builds a FeatureSelection object describing which features will be fed into the classifier, which ones are categorical, and which column corresponds to the target.
@@ -70,7 +70,7 @@ You can find examples of `_load` and `_select_features(df)` functions here:
 [mushrooms.py](src/columnar/loaders/mushrooms.py)
 
 ---
-## 7. Next Steps
+## 8. Next Steps
 
 - [x] Add a fourth type of classifiers (LightGBM)
 - [x] Perform comparison on other classification tasks
