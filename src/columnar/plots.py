@@ -10,7 +10,8 @@ def plot_model_encoder_pairs(reporter: report.Report,
                              metrics: list[str] = None, 
                              figpath: Optional[str] = None,
                              title: Optional[str] = None,
-                            ) -> None:
+                             show: bool = True,
+                            ) -> plt.Figure:
     """plots metrics"""
     if metrics is None:
         metrics = list(reporter.scorer.scoring_fcts.keys())
@@ -44,8 +45,11 @@ def plot_model_encoder_pairs(reporter: report.Report,
     
     if figpath is not None:
         plt.savefig(figpath, transparent=False, facecolor='white');
-        
-    plt.show()
+    
+    if show:
+        plt.show()
+    
+    return fig
         
         
 def _get_class_name_from_string(string : str) -> str:

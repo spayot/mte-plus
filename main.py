@@ -1,3 +1,6 @@
+"""
+Main file: defines steps to evaluate categorical encoders / classifier pairs on a given task.
+"""
 import argparse
 import os
 
@@ -18,8 +21,9 @@ from src import columnar as col
 
 ROOT_PATH = './'
 
+plt.style.use('fivethirtyeight')
+
 def main(args):
-    plt.style.use('fivethirtyeight')
     
     print(f"Comparing (model, encoder) pairs for the {args.task} classification task")
     print(f"\tloading dataset")
@@ -34,7 +38,7 @@ def main(args):
         auc=metrics.roc_auc_score,
     )
 
-    # cross validation strategy
+    # define cross validation strategy
     kf = KFold(n_splits=5)
     
     # define features to select
@@ -79,8 +83,10 @@ def main(args):
     
     # saving summary plot model
     figpath = f'figures/{args.task}.png'
-    col.plot_model_encoder_pairs(reporter, figpath=figpath, title=f"{args.task} dataset".capitalize())
+    fig = col.plot_model_encoder_pairs(reporter, figpath=figpath, title=f"{args.task} dataset".capitalize())
     print(f"visualization saved in {figpath}")
+    
+    return reporter
             
         
 
@@ -96,4 +102,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    main(args)
+    reporter = main(args)

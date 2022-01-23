@@ -53,7 +53,17 @@ This command will evaluate the performance of various encoder / classifier combi
 - a summary figure in the `figures/` folder.
 Both new artifacts are named after the prediction task used to evaluate the pipelines.
 
-### 6.2 the Notebook way
+### 6.2 using a Streamlit App
+Allows to run the benchmark while selecting:
+- which task to use for benchmarking
+- the type of downstream classifiers
+- the encoders to benchmark against
+
+
+to do so, you can simply run the command:  
+    `streamlit run streamlit.py`
+
+### 6.3 the Notebook way
 check out [notebooks/adult](notebooks/adult.ipynb).
 
 ---
@@ -80,4 +90,4 @@ You can find examples of `_load` and `_select_features(df)` functions here:
   - [x] add titnaic dataset and compare performances
   - [x] add larger dataset and compare performances
 
-- [ ] **Categorical data embeddings** is a potentially more expressive generalization of MTE which represents each categorical value as an embedding. embeddings sizes can be defined based on the cardinality of each feature. An embedding of size 1 should replicate closely the principle of MTE (even though values are learnt more indireclty), but weights are learnt instead of explicitly defined.
+- [ ] **Categorical feature embeddings** are a potentially more expressive generalization of MTE which represents each categorical value as an embedding. embeddings sizes can be defined based on the cardinality of each feature. An embedding of size 1 should replicate closely the principle of MTE, but weights are learnt instead of explicitly defined.
