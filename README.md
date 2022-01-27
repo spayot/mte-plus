@@ -22,6 +22,10 @@ https://www.kaggle.com/uciml/mushroom-classification#
 Aims to predict whether a data scientist is looking for a job change or not. only some minimal imputing and feature engineering was performed.
 https://www.kaggle.com/arashnic/hr-analytics-job-change-of-data-scientists
 
+### 2.5 PetFinder
+Aims to predict whether a pet will be adopted within a 100 days.
+https://www.kaggle.com/c/petfinder-adoption-prediction/data
+
 ---
 ## 3. Benchmarking strategy
 A ML Pipeline is built with each categorical encoder / classifier pairs, and trained on the task at hand. Evaluation is performed through a 5-fold cross validation strategy, to extract mean and std dev values for each metric of interest.   
@@ -35,6 +39,7 @@ A ML Pipeline is built with each categorical encoder / classifier pairs, and tra
 **Mushrooms Task** ![](figures/mushrooms.png)
 **Titanic Task** ![](figures/titanic.png)
 **HR Analytics Task** ![](figures/hr_analytics.png)
+**PetFinder** ![](figures/petfinder.png)
 Mean Target Encoding seem to be the most resilient encoding strategy to classifer choices and performs best with 2 out of the 4 classifier choices.
 
 ---

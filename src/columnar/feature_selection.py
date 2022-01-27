@@ -4,15 +4,17 @@ and used for training the classifier, and which corresponds to the target featur
 """
 
 from dataclasses import dataclass, field
-from typing import List, Tuple
+from typing import List, Tuple, Annotated
 
 import pandas as pd
 
+DatasetColumn = Annotated[str, "column name in a dataset"]
+
 @dataclass
 class FeatureSelection:
-    categoricals: List[str] = field(default_factory=list)
-    numericals: List[str] = field(default_factory=list)
-    target: str = None
+    categoricals: List[DatasetColumn] = field(default_factory=list)
+    numericals: List[DatasetColumn] = field(default_factory=list)
+    target: DatasetColumn = None
     
     def select_features(self, df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.Series]:
         """splits a dataset between input features and target output. 

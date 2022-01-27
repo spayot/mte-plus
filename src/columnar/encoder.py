@@ -11,7 +11,7 @@ from . import feature_selection
 class Mapper:
     """a Mapper object.
         each attribute"""
-    def add_map(self, column: str, map: Dict[str, float]) -> None:
+    def add_map(self, column: feature_selection.DatasetColumn, map: Dict[str, float]) -> None:
         setattr(self, column, map)
         
     def items(self):
