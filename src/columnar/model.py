@@ -18,26 +18,26 @@ from . import encoder, feature_selection
 
 Config = dict[str, str]
 
+
+
 class CategoricalPipeline:
     """a pipeline including feature selection, categorical encoding,
     scaling (optional) and a classifier"""
     
     def __init__(self, 
                  features: feature_selection.FeatureSelection,
-                 encoder: Optional[encoder.CategoricalEncoder] = None,
+                 transformer: TransformerMixin,
                  scaler: Optional[TransformerMixin] = None,
-                 model: Optional[BaseEstimator] = None, ):
+                 model: Optional[BaseEstimator] = None, 
+                ):
         self.features = features
-        self.encoder = encoder
-        self.scaler = scaler
+        self.transformer = transformer # the encoding strategy, defines how each column should be transformed
+        self.scaler = scaler # a scaling layer
         self.model = model
         
-        trans = ColumnTransformer(
-            [('categories', self.encoder, self.features.categoricals)], 
-            remainder='passthrough')
         
         steps = [
-            ('transform', trans),
+            ('transformer', self.transformer),
             ('clf', self.model),
         ]
         
@@ -61,14 +61,11 @@ class CategoricalPipeline:
     def clone(self):
         """allows to create a clone version of the same pipeline (ie reinitialize with same steps)"""
         cls = self.__class__
-        encoder = None if self.encoder is None else clone(self.encoder)
-        scaler = None if self.scaler is None else clone(self.scaler)
-        model = None if self.model is None else clone(self.model)
         return cls(
             features = self.features,
-            encoder = encoder,
-            scaler = scaler,
-            model = model,
+            transformer = clone(self.transformer),
+            scaler = None if self.scaler is None else clone(self.scaler),
+            model = clone(self.model),
         )
         
     
@@ -81,9 +78,7 @@ class CategoricalPipeline:
     def __repr__(self) -> str:
         return f"""CategoricalPipeline(
         features={self.features},
-        encoder={self.encoder},
+        transformer={self.transformer},
         scaler={self.scaler},
         model={self.model}),   
         """
-
-

@@ -51,24 +51,23 @@ def main(args):
         RandomForestClassifier(n_estimators=100, max_depth=5),
         LogisticRegression(max_iter=500),
         KNeighborsClassifier(n_neighbors=10),
-        LGBMClassifier(),
+        LGBMClassifier()
     ]
 
-    transformers = [
+    encoders = [
         col.MeanTargetEncoder(feature_selection),
-        col.TransformStrategy(feature_selection, OneHotEncoder(handle_unknown='ignore')),
-        col.TransformStrategy(feature_selection, OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
+        OneHotEncoder(handle_unknown='ignore'),
+        OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1),
     ]
     
     
     for model in models:
         print(f"\tevaluating encoders when fitting a {model}")
-        for transformer in transformers:
+        for encoder in encoders:
             pipe = col.CategoricalPipeline(features=feature_selection,
-                                           transformer=clone(transformer),
-                                           scaler=MaxAbsScaler(),
                                            model=clone(model),
-                                          )
+                                           scaler=MaxAbsScaler(),
+                                           encoder=clone(encoder))
 
             cv_score = col.cv_score(pipeline=pipe,
                                     data=df, 

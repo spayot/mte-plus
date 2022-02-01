@@ -21,12 +21,14 @@ def plot_model_encoder_pairs(reporter: report.Report,
     fig, axs = plt.subplots(1, len(metrics), figsize=(len(metrics) * 10,5))
     for ax, metric in zip(axs, metrics):
         # create summary view for mean value of this metric during cross validation
-        summary = pd.pivot(reporter.report, index='model', columns='encoder', values=metric)
+        summary = pd.pivot(reporter.report, index='model', columns='transformer', values=metric)
         
         # get std dev of this metric across cross validation
-        err = pd.pivot(reporter.report, index='model', columns='encoder', values=metric + '-std')
+        err = pd.pivot(reporter.report, index='model', columns='transformer', values=metric + '-std')
         
         summary = _clean_index_column_names(summary)
+        err = _clean_index_column_names(err)
+        
         
         for table in [summary, err]:
             # clean up column and index names
@@ -59,7 +61,7 @@ def _get_class_name_from_string(string : str) -> str:
     >>> _get_class_name_from_string(s)
     "RandomForestRegressor"
     """
-    return re.match('[A-Za-z]+', string).group(0)
+    return re.match('[A-Za-z_]+', string).group(0)
 
 def _clean_index_column_names(df: pd.DataFrame) -> None:
     table = df.copy()

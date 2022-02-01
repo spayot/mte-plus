@@ -2,9 +2,12 @@
 Defines the CategoricalEncoder Interface as well as the MeanTargetEncoder implementation.
 """
 from abc import ABC, abstractmethod
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Protocol
 
+import numpy as np
 import pandas as pd
+from sklearn.base import TransformerMixin
+from sklearn.compose import ColumnTransformer
 
 from . import feature_selection
 
@@ -89,11 +92,14 @@ class MeanTargetEncoder(CategoricalEncoder):
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
         """returns a dataframe similar to the input df, but augmented with
-        mean-target encoded categorical features, as """
+        mean-target encoded categorical features"""
         assert self.status == 'fitted', "model not fitted"
         output = pd.DataFrame()
         for col, train_statistics in self.mapper.items():
             output[col + self.suffix] = df[col].map(train_statistics).fillna(self.global_mean)
+        for col in self.features.numericals:
+            output[col] = df[col]
+        
         return output
 
     def fit_transform(self, df: pd.DataFrame,
@@ -108,3 +114,30 @@ class MeanTargetEncoder(CategoricalEncoder):
 
     def __repr__(self):
         return f"MeanTargetEncoder(target={self.target}, alpha={self.alpha})"
+    
+
+    
+class TransformStrategy(TransformerMixin):
+    def __init__(self, features: feature_selection.FeatureSelection, 
+                 cat_encoder: CategoricalEncoder):
+        self.features = features
+        self.cat_encoder = cat_encoder
+        self.transformer = ColumnTransformer(
+            [('categories', cat_encoder, features.categoricals)], 
+            remainder='passthrough')
+    
+    def fit(self, X: pd.DataFrame, y: pd.Series=None):
+        return self.transformer.fit(X, y)
+        
+    def transform(self, X: np.ndarray) -> np.ndarray:
+        return self.transformer.transform(X)
+    
+    def get_params(self, deep: bool = True) -> dict:
+        # cat_encoder = clone(self.cat_encoder) if deep else self.cat_encoder
+        # cat_encoder = self.cat_encoder
+        return {'features': self.features, 'cat_encoder': self.cat_encoder}
+    
+    def __repr__(self) -> str:
+        return f"TransformStrategy_{self.cat_encoder}()"
+        
+    
