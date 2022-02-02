@@ -1,15 +1,15 @@
 features;transformer;scaler;model;pipe;acc;f1;auc;acc-std;f1-std;auc-std
 FeatureSelection(categoricals=['pclass', 'sex', 'sibsp', 'parch', 'cabin', 'embarked', 'missing_age', 'cabin_type'], numericals=['age', 'fare'], target='survived');MeanTargetEncoder(target=survived, alpha=5);MaxAbsScaler();RandomForestClassifier(max_depth=5);"Pipeline(steps=[('transformer', MeanTargetEncoder(target=survived, alpha=5)),
                 ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.8125666938673028;0.7273331842845197;0.8382889201097757;0.04309529617882361;0.056499247340665915;0.02924812350785525
+                ('clf', RandomForestClassifier(max_depth=5))])";0.8226727763480008;0.7461019713470817;0.8473485556430681;0.030133858259463898;0.04595225448272897;0.025264569401649
 FeatureSelection(categoricals=['pclass', 'sex', 'sibsp', 'parch', 'cabin', 'embarked', 'missing_age', 'cabin_type'], numericals=['age', 'fare'], target='survived');TransformStrategy_OneHotEncoder(handle_unknown='ignore')();MaxAbsScaler();RandomForestClassifier(max_depth=5);"Pipeline(steps=[('transformer',
                  TransformStrategy_OneHotEncoder(handle_unknown='ignore')()),
                 ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.7912937040989266;0.6749474510628258;0.8551498457775667;0.038405027382526366;0.07423672132537669;0.03409659017287039
+                ('clf', RandomForestClassifier(max_depth=5))])";0.8103508882053857;0.7128807416779409;0.8566564214713843;0.03312378006921947;0.05786170695321007;0.035327783882506
 FeatureSelection(categoricals=['pclass', 'sex', 'sibsp', 'parch', 'cabin', 'embarked', 'missing_age', 'cabin_type'], numericals=['age', 'fare'], target='survived');TransformStrategy_OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)();MaxAbsScaler();RandomForestClassifier(max_depth=5);"Pipeline(steps=[('transformer',
                  TransformStrategy_OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)()),
                 ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.808097420124286;0.7288574543495467;0.865881338243651;0.030471591005873783;0.05205185320893602;0.033136883765200825
+                ('clf', RandomForestClassifier(max_depth=5))])";0.8182035026049841;0.7375922432264153;0.8648007994914622;0.03910293101772006;0.05954255584585664;0.031919630915410876
 FeatureSelection(categoricals=['pclass', 'sex', 'sibsp', 'parch', 'cabin', 'embarked', 'missing_age', 'cabin_type'], numericals=['age', 'fare'], target='survived');MeanTargetEncoder(target=survived, alpha=5);MaxAbsScaler();LogisticRegression(max_iter=500);"Pipeline(steps=[('transformer', MeanTargetEncoder(target=survived, alpha=5)),
                 ('scale', MaxAbsScaler()),
                 ('clf', LogisticRegression(max_iter=500))])";0.7856568953612454;0.7122560261550139;0.8458439675647782;0.02265738126484319;0.04393714171815591;0.023494230458108074

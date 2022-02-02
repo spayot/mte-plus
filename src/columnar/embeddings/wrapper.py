@@ -1,43 +1,33 @@
 """Wrapper Class to fit an embedding layer based on a 
 simple Deep Learning model.
 
-how to do proper get_params
-
 """
 from typing import Optional
 
 import pandas as pd 
+from sklearn.base import TransformerMixin
 import tensorflow as tf
 
-from ..encoder import CategoricalEncoder
+from ..encode import CategoricalEncoder
 from ..feature_selection import FeatureSelection
 
-from .tf_dataload import df_to_dataset
-from .tf_preprocessing import TFEmbeddingLayer, TFNormalizationLayer
-from .tf_models import TFCatEmbsModel
+from .data import df_to_dataset
+from .layers import TFEmbeddingLayer, TFNormalizationLayer
+from .models import TFCatEmbsClassifier
 
 
-class TFEmbeddingWrapper(CategoricalEncoder):
+class TFEmbeddingWrapper(TransformerMixin):
     """Allows to transform categorical features into embeddings, 
     after fitting a simple neural network on the dataset.
     Note: numerical features are normalized for the sake of fitting 
     the DNN and generating embeddings."""
     def __init__(self, 
-                 task: str,
                  features: FeatureSelection,
-                 root_path: str = './',
                 ):
-        self.ROOT_PATH = root_path
         self.features = features
-        self.task = task
         
-        # load the dataset for the task
-        loader = col.DataLoader(root=root_path, task=task)
-        dataframe = loader.load_data()
-        dataset = df_to_dataset(dataframe, 
-                                target=features.target,
-                                )
         
+                
         # initialize model (concatenated embeddings + dense layers) based on dataset and feature selection
         self.model = TFCatEmbsModel(dataset, features)
         
@@ -53,15 +43,38 @@ class TFEmbeddingWrapper(CategoricalEncoder):
         return {'task': self.task, 'features': self.features, 'root_path': self.root_path}
     
     
-    def fit(self, df: pd.DataFrame, y: Optional[pd.Series] = None) -> None:
+    def fit(self, df: pd.DataFrame, 
+            y: Optional[pd.Series] = None, 
+            epochs: int = 3,
+            verbose: str = 2,
+            **kwargs,
+           ) -> None:
         if y is None:
             y = df[self.features.target]
-            
+        
+        # transform dataframe into dataset
         dataset = df_to_dataset(df.drop(columns=[self.features.target]), target=y)
-        self.model.fit(dataset)
+        
+        # initialize model (concatenated embeddings + dense layers) based on dataset and feature selection
+        self.model = TFCatEmbsClassifier(dataset, features)
+        
+        # compile
+        self.model.compile(optimizer='adam',
+                           loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+                           metrics=["accuracy"])
+        
+        
+        
+        self.model.fit(dataset, epochs=epochs, verbose=verbose, **kwargs)
+        
+        return self
+        
     
     
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
+        pass
+    
+    def _transform(self, dataset: tf.data.Dataset) -> None:
         pass
     
     

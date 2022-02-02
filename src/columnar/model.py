@@ -14,7 +14,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.base import BaseEstimator, TransformerMixin, clone
 
-from . import encoder, feature_selection
+from . import feature_selection
 
 Config = dict[str, str]
 

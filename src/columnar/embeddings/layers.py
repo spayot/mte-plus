@@ -15,7 +15,7 @@ def _get_dtype(ds: tf.data.Dataset, header: str):
 class TFEmbeddingLayer(layers.Layer):
     def __init__(self, 
                  col_name: DatasetColumn, 
-                 dataset: tf.data.Dataset, 
+                 feature_ds: tf.data.Dataset, 
                  **kwargs):
         super().__init__(**kwargs)
         self.col_name = col_name
@@ -25,7 +25,7 @@ class TFEmbeddingLayer(layers.Layer):
         
         
         # Prepare a `tf.data.Dataset` that only yields the feature.
-        feature_ds = dataset.map(lambda x, y: x[col_name])
+        
         self.index.adapt(feature_ds)
         voc_size = self.index.vocabulary_size()
         self.emb_size = _calculate_embedding_size(voc_size)
