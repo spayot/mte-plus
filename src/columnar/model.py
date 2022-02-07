@@ -73,7 +73,7 @@ class CategoricalPipeline:
     def config(self) -> Config:
         """returns a dictionary with the Pipeline's attributes turned into
         strings"""
-        return {k: str(v) for k,v in self.__dict__.items()}
+        return {k: str(v) for k,v in self.__dict__.items() if k != 'pipe'}
     
     def __repr__(self) -> str:
         return f"""CategoricalPipeline(

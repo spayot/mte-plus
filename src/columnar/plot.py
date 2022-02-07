@@ -21,10 +21,10 @@ def plot_model_encoder_pairs(reporter: report.Report,
     fig, axs = plt.subplots(1, len(metrics), figsize=(len(metrics) * 10,5))
     for ax, metric in zip(axs, metrics):
         # create summary view for mean value of this metric during cross validation
-        summary = pd.pivot(reporter.report, index='model', columns='transformer', values=metric)
+        summary = pd.pivot(reporter.report, index='classifier', columns='transformer', values=metric)
         
         # get std dev of this metric across cross validation
-        err = pd.pivot(reporter.report, index='model', columns='transformer', values=metric + '-std')
+        err = pd.pivot(reporter.report, index='classifier', columns='transformer', values=metric + '-std')
         
         summary = _clean_index_column_names(summary)
         err = _clean_index_column_names(err)

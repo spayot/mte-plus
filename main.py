@@ -3,20 +3,25 @@ Main file: defines steps to evaluate categorical encoders / classifier pairs on 
 """
 import argparse
 import os
+import time
 
-from lightgbm import LGBMClassifier
 import matplotlib.pyplot as plt
-from sklearn.base import clone
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 from sklearn.model_selection import KFold
-from sklearn.neighbors import KNeighborsClassifier
+
+# transforms
 from sklearn.preprocessing import MaxAbsScaler, OneHotEncoder, OrdinalEncoder
 
+# classifiers
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
+from lightgbm import LGBMClassifier
 
+# abstract classes
+from sklearn.base import clone, TransformerMixin, BaseEstimator
 
-
+# custom library
 from src import columnar as col
 
 ROOT_PATH = './'
@@ -29,7 +34,7 @@ def main(args):
     print(f"\tloading dataset")
     # load data
     loader = col.DataLoader(root=ROOT_PATH, task=args.task)
-    df = loader.load_data()
+    data = loader.load_data()
     
     # define scoring metrics of interest
     scorer = col.Scorer(
@@ -42,12 +47,12 @@ def main(args):
     kf = KFold(n_splits=5)
     
     # define features to select
-    feature_selection = col.FeatureSelection(**loader.get_selected_features(df))
+    feature_selection = col.FeatureSelection(**loader.get_selected_features(data))
     
     reporter = col.Report(scorer=scorer)
-    reporter.set_columns_to_show(['model', 'encoder'] + list(scorer.scoring_fcts.keys()))
+    reporter.set_columns_to_show(['classifier', 'transformer'] + list(scorer.scoring_fcts.keys()))
 
-    models = [
+    classifiers = [
         RandomForestClassifier(n_estimators=100, max_depth=5),
         LogisticRegression(max_iter=500),
         KNeighborsClassifier(n_neighbors=10),
@@ -58,24 +63,39 @@ def main(args):
         col.MeanTargetEncoder(feature_selection),
         col.TransformStrategy(feature_selection, OneHotEncoder(handle_unknown='ignore')),
         col.TransformStrategy(feature_selection, OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
+        col.embeddings.wrapper.TFEmbeddingWrapper(features=feature_selection, emb_size_strategy='single'),
+        col.embeddings.wrapper.TFEmbeddingWrapper(features=feature_selection, emb_size_strategy='max2'),
     ]
+
+    print(f"""\t  5 cross-validation folds
+    \tx {len(transformers)} transformers
+    \tx {len(classifiers)} models 
+    \tcombinations to train and test""")
     
-    
-    for model in models:
-        print(f"\tevaluating encoders when fitting a {model}")
-        for transformer in transformers:
-            pipe = col.CategoricalPipeline(features=feature_selection,
-                                           transformer=clone(transformer),
-                                           scaler=MaxAbsScaler(),
-                                           model=clone(model),
+    runner = col.benchmark.BenchmarkRunner(features=feature_selection,
+                                           transformers=transformers,
+                                           classifiers=classifiers,
+                                           scorer = scorer,
                                           )
+    for i, (train_idx, test_idx) in enumerate(kf.split(data)):
+        
+        print(f"\tRunning benchmark on fold number {i+1}", end='\r')
+        start = time.time()
+        
+        # split train and test data using the CV fold
+        cv_train, cv_test = data.iloc[train_idx], data.iloc[test_idx]
+        
+        X_train, y_train = feature_selection.select_features(cv_train)
+        X_test, y_test = feature_selection.select_features(cv_test)
+        
+        runner.run(X_train, y_train, X_test, y_test)
+        print(f"\tRunning benchmark on fold number {i+1} - time = {col.utils.convert_time(time.time() - start)}")
+            
+                
+    print("evaluation completed")
+    
+    reporter = runner.create_reporter()
 
-            cv_score = col.cv_score(pipeline=pipe,
-                                    data=df, 
-                                    kf=kf,
-                                    scorer=reporter.scorer)
-
-            reporter.add_to_report(pipe.config, cv_score, show=False)
     
     # saving report as csv
     save_path = f'runs/{args.task}.csv'
@@ -84,7 +104,7 @@ def main(args):
     
     # saving summary plot model
     figpath = f'figures/{args.task}.png'
-    fig = col.plot_model_encoder_pairs(reporter, figpath=figpath, title=f"{args.task} dataset".capitalize())
+    fig = col.plot_model_encoder_pairs(reporter, figpath=os.path.join(ROOT_PATH, figpath), title=f"{args.task} dataset".capitalize())
     print(f"visualization saved in {figpath}")
     
     return reporter
