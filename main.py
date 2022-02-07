@@ -65,6 +65,7 @@ def main(args):
         col.TransformStrategy(feature_selection, OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
         col.embeddings.wrapper.TFEmbeddingWrapper(features=feature_selection, emb_size_strategy='single'),
         col.embeddings.wrapper.TFEmbeddingWrapper(features=feature_selection, emb_size_strategy='max2'),
+        col.embeddings.wrapper.TFEmbeddingWrapper(features=feature_selection, emb_size_strategy='max50'),
     ]
 
     print(f"""\t  5 cross-validation folds
@@ -109,11 +110,7 @@ def main(args):
     
     return reporter
             
-        
 
-    
-
-    
     
     
 if __name__ == '__main__':

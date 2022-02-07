@@ -26,7 +26,7 @@ class Report:
     
     def __init__(self, scorer: score.Scorer):
         self.report = pd.DataFrame()
-        self.columns_to_show : list[str] = None
+        self.columns_to_show : list[str] = ['classifier', 'transformer'] + list(scorer.scoring_fcts.keys())
         self.scorer = scorer
     
     
@@ -62,7 +62,7 @@ class Report:
         .show() method"""
         if len(self.report) > 0:
             not_existing_cols = [col for col in columns if col not in self.report.columns]
-            assert not_existing_cols, f"{not_existing_cols} are not valid column names"
+            assert not not_existing_cols, f"{not_existing_cols} are not valid column names"
         self.columns_to_show = columns
         
         
@@ -72,6 +72,18 @@ class Report:
     def save(self, path: Path) -> None:
         """save report to csv"""
         self.report.to_csv(path, index=False, sep=';')
+    
+    @classmethod
+    def from_csv(cls, path: Path):
+        """Warning: scorer is hard coded as a base scorer in 
+        current implementation"""
+        scorer = score.get_base_scorer()
+        reporter = cls(scorer=scorer)
+        reporter.report = pd.read_csv(path, sep=';')
+        reporter.set_columns_to_show(['classifier', 'transformer'] + list(scorer.scoring_fcts.keys()))
+        
+        return reporter
+        
     
     
     def __repr__(self) -> str:

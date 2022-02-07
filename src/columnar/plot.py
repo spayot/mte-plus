@@ -1,3 +1,4 @@
+import math
 import re
 from typing import Optional
 
@@ -6,6 +7,14 @@ import pandas as pd
 
 from . import report, model
 
+plt.style.use('fivethirtyeight')
+
+def get_ylim_min(df: pd.DataFrame) -> float:
+    y_min = df.min().min()
+    ylim_min = max(0, math.floor(10 * y_min - 1) / 10)
+    return ylim_min
+    
+    
 def plot_model_encoder_pairs(reporter: report.Report, 
                              metrics: list[str] = None, 
                              figpath: Optional[str] = None,
@@ -16,6 +25,8 @@ def plot_model_encoder_pairs(reporter: report.Report,
     if metrics is None:
         metrics = list(reporter.scorer.scoring_fcts.keys())
     
+    # get ylim_min
+    ylim_min = get_ylim_min(reporter.report[metrics])
     
     # create figure
     fig, axs = plt.subplots(1, len(metrics), figsize=(len(metrics) * 10,5))
@@ -27,15 +38,18 @@ def plot_model_encoder_pairs(reporter: report.Report,
         err = pd.pivot(reporter.report, index='classifier', columns='transformer', values=metric + '-std')
         
         summary = _clean_index_column_names(summary)
-        err = _clean_index_column_names(err)
         
+        err = _clean_index_column_names(err)
         
         for table in [summary, err]:
             # clean up column and index names
             table.columns = [_get_class_name_from_string(col) for col in table.columns]
             table.index = [_get_class_name_from_string(idx) for idx in table.index]
+        
         summary.plot.bar(ax=ax, yerr=err)
-        ax.set_ylim([0.3,1])
+        
+        # set y limits
+        ax.set_ylim([ylim_min,1])
         ax.set_xticklabels(summary.index, rotation=0)
         ax.set_title(metric.upper())
         ax.get_legend().remove()
@@ -61,7 +75,7 @@ def _get_class_name_from_string(string : str) -> str:
     >>> _get_class_name_from_string(s)
     "RandomForestRegressor"
     """
-    return re.match('[A-Za-z_]+', string).group(0)
+    return re.match('[A-Za-z0-9_]+', string).group(0)
 
 def _clean_index_column_names(df: pd.DataFrame) -> None:
     table = df.copy()

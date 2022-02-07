@@ -1,170 +1,28 @@
-features;encoder;scaler;model;pipe;acc;f1;auc;acc-std;f1-std;auc-std
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');MeanTargetEncoder(target=target, alpha=5);MaxAbsScaler();RandomForestClassifier(max_depth=5);"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  MeanTargetEncoder(target=target, alpha=5),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.7880777706753335;0.5286062745880877;0.7984963834002475;0.006840276709926734;0.010938289725510218;0.004589703503202397
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();RandomForestClassifier(max_depth=5);"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  OneHotEncoder(handle_unknown='ignore'),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.7531055846465134;0.04576489458224967;0.7931418295332571;0.0032548009017595637;0.0157800509642555;0.003966621543970196
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();RandomForestClassifier(max_depth=5);"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  OrdinalEncoder(handle_unknown='use_encoded_value',
-                                                                 unknown_value=-1),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()),
-                ('clf', RandomForestClassifier(max_depth=5))])";0.7803005532822282;0.461346181325401;0.7953345086106407;0.0046171286995650975;0.018111291308565144;0.005019329905785172
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');MeanTargetEncoder(target=target, alpha=5);MaxAbsScaler();LogisticRegression(max_iter=500);"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  MeanTargetEncoder(target=target, alpha=5),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()),
-                ('clf', LogisticRegression(max_iter=500))])";0.7783169686477036;0.4418719515731893;0.7915724858226523;0.00542291525101504;0.007510603288297728;0.009388944047153144
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();LogisticRegression(max_iter=500);"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  OneHotEncoder(handle_unknown='ignore'),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()),
-                ('clf', LogisticRegression(max_iter=500))])";0.7820231230882663;0.4636346130174404;0.7962057425263529;0.007723321019885298;0.010891658330755779;0.0077347722612739625
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();LogisticRegression(max_iter=500);"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  OrdinalEncoder(handle_unknown='use_encoded_value',
-                                                                 unknown_value=-1),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()),
-                ('clf', LogisticRegression(max_iter=500))])";0.768347411976465;0.36339129295835426;0.7650495289243882;0.005206613197809269;0.013054153592933063;0.007088459580222012
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');MeanTargetEncoder(target=target, alpha=5);MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  MeanTargetEncoder(target=target, alpha=5),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()),
-                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.7763335066257087;0.4738537375619572;0.7776631357464426;0.006869554760760796;0.01125544710601687;0.005682555735956603
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  OneHotEncoder(handle_unknown='ignore'),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()),
-                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.7724709530917158;0.46186483091768116;0.7707253393655289;0.006765493855112406;0.008910013832653208;0.0074963155027179
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  OrdinalEncoder(handle_unknown='use_encoded_value',
-                                                                 unknown_value=-1),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()),
-                ('clf', KNeighborsClassifier(n_neighbors=10))])";0.7618748191465187;0.3609615536962498;0.7364918996877052;0.0028625051067818533;0.011418783422150957;0.005290233157483855
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');MeanTargetEncoder(target=target, alpha=5);MaxAbsScaler();LGBMClassifier();"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  MeanTargetEncoder(target=target, alpha=5),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.793401770197962;0.5836380393967339;0.7978831014408397;0.009122510905315084;0.01210273636051148;0.004634957538042204
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');OneHotEncoder(handle_unknown='ignore');MaxAbsScaler();LGBMClassifier();"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  OneHotEncoder(handle_unknown='ignore'),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.7963770449726411;0.5902380511778285;0.8008546554932396;0.005747983993908631;0.00799775537403373;0.0049158646029822586
-FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1);MaxAbsScaler();LGBMClassifier();"Pipeline(steps=[('transform',
-                 ColumnTransformer(remainder='passthrough',
-                                   transformers=[('categories',
-                                                  OrdinalEncoder(handle_unknown='use_encoded_value',
-                                                                 unknown_value=-1),
-                                                  ['city', 'gender',
-                                                   'relevent_experience',
-                                                   'enrolled_university',
-                                                   'education_level',
-                                                   'major_discipline',
-                                                   'experience', 'company_size',
-                                                   'company_type',
-                                                   'last_new_job'])])),
-                ('scale', MaxAbsScaler()), ('clf', LGBMClassifier())])";0.7952286696431539;0.588551670828971;0.798495172652171;0.005548015081102638;0.006460708596635402;0.006105330266623267
+feature_selection;transformer;scaler;classifier;acc;f1;auc;acc-std;f1-std;auc-std
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');MeanTargetEncoder(target=target, alpha=5);MaxAbsScaler();RandomForestClassifier(max_depth=5);0.7883910865595415;0.5280125539066947;0.79854383337401;0.008255700765377455;0.013019716694244494;0.005024628581486992
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');MeanTargetEncoder(target=target, alpha=5);MaxAbsScaler();LogisticRegression(max_iter=500);0.7783169686477036;0.4418719515731893;0.7915724858226523;0.00542291525101504;0.007510603288297728;0.009388944047153144
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');MeanTargetEncoder(target=target, alpha=5);MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);0.7763335066257087;0.4738537375619572;0.7776631357464426;0.006869554760760796;0.01125544710601687;0.005682555735956603
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');MeanTargetEncoder(target=target, alpha=5);MaxAbsScaler();LGBMClassifier();0.793401770197962;0.5836380393967339;0.7978831014408397;0.009122510905315084;0.01210273636051148;0.004634957538042204
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TransformStrategy_OneHotEncoder(handle_unknown='ignore')();MaxAbsScaler();RandomForestClassifier(max_depth=5);0.7538884792722156;0.060104115323623294;0.7926204128579746;0.004197560624957236;0.014463747486777541;0.004647920956146228
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TransformStrategy_OneHotEncoder(handle_unknown='ignore')();MaxAbsScaler();LogisticRegression(max_iter=500);0.7820231230882663;0.4636346130174404;0.7962057425263529;0.007723321019885298;0.010891658330755779;0.0077347722612739625
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TransformStrategy_OneHotEncoder(handle_unknown='ignore')();MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);0.7724709530917158;0.46186483091768116;0.7707253393655289;0.006765493855112406;0.008910013832653208;0.0074963155027179
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TransformStrategy_OneHotEncoder(handle_unknown='ignore')();MaxAbsScaler();LGBMClassifier();0.7963770449726411;0.5902380511778285;0.8008546554932396;0.005747983993908631;0.00799775537403373;0.0049158646029822586
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TransformStrategy_OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)();MaxAbsScaler();RandomForestClassifier(max_depth=5);0.7812401058500346;0.46723504490347684;0.7949231307201786;0.006347058580226281;0.018909666094050686;0.00410666929531261
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TransformStrategy_OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)();MaxAbsScaler();LogisticRegression(max_iter=500);0.768347411976465;0.36339129295835426;0.7650495289243882;0.005206613197809269;0.013054153592933063;0.007088459580222012
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TransformStrategy_OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)();MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);0.7618748191465187;0.3609615536962498;0.7364918996877052;0.0028625051067818533;0.011418783422150957;0.005290233157483855
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TransformStrategy_OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)();MaxAbsScaler();LGBMClassifier();0.7952286696431539;0.588551670828971;0.798495172652171;0.005548015081102638;0.006460708596635402;0.006105330266623267
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_SingleStrategy;MaxAbsScaler();RandomForestClassifier(max_depth=5);0.7853637150833574;0.5038613029590312;0.7968498115199772;0.0051841783809635205;0.017456953950551815;0.005286743584416916
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_SingleStrategy;MaxAbsScaler();LogisticRegression(max_iter=500);0.7816579284803838;0.4564051207040496;0.7968404746569961;0.008557336813370163;0.013558745665652164;0.008451612840903016
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_SingleStrategy;MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);0.7749239529843617;0.4573361389485915;0.7734528703273268;0.008925554494330822;0.011366803960983198;0.005407276543216222
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_SingleStrategy;MaxAbsScaler();LGBMClassifier();0.7973165975404471;0.5975487007556868;0.796858671233235;0.0074282151703613354;0.010404499337206954;0.0070719557490539296
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_SingleStrategy;MaxAbsScaler();DNN;0.7560285311182426;0.09841525906313725;0.797515757474305;0.003405061932289049;0.033418002036871924;0.007396646044486885
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_Max2Strategy;MaxAbsScaler();RandomForestClassifier(max_depth=5);0.7891738040782561;0.5381459673641145;0.796964464161346;0.007737325384056536;0.01843786515858203;0.004272901971483958
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_Max2Strategy;MaxAbsScaler();LogisticRegression(max_iter=500);0.7812402693334074;0.4580710227785736;0.797319444331986;0.0061659483409419475;0.009988531143395573;0.007963624326976773
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_Max2Strategy;MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);0.7768553319284661;0.46013205831435533;0.7681844550792958;0.005474224932825185;0.009550942841178618;0.008203810014257058
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_Max2Strategy;MaxAbsScaler();LGBMClassifier();0.7952286287723107;0.5899914843240761;0.7971964348415213;0.00812084865674091;0.01333615481099618;0.005903907845420871
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_Max2Strategy;MaxAbsScaler();DNN;0.7584298430178158;0.14363552142401956;0.7988289186512022;0.005120245318674595;0.04986256022249449;0.007730559110561604
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_Max50Strategy;MaxAbsScaler();RandomForestClassifier(max_depth=5);0.7959071937588588;0.5816719885125001;0.7934609144326611;0.008976186111143258;0.0066092938311309085;0.005549212620287774
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_Max50Strategy;MaxAbsScaler();LogisticRegression(max_iter=500);0.7820232320771815;0.46525187359194453;0.7944880838640948;0.007558936331652901;0.01230416346464673;0.007026521482529038
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_Max50Strategy;MaxAbsScaler();KNeighborsClassifier(n_neighbors=10);0.7788915173382291;0.48101430786219257;0.7807225902420795;0.007852274556516953;0.017462441762587988;0.006199155436863853
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_Max50Strategy;MaxAbsScaler();LGBMClassifier();0.7929844107705025;0.5829115857690581;0.7944037963031128;0.008300613311565013;0.01198161975936193;0.005261617835664682
+FeatureSelection(categoricals=['city', 'gender', 'relevent_experience', 'enrolled_university', 'education_level', 'major_discipline', 'experience', 'company_size', 'company_type', 'last_new_job'], numericals=['city_development_index', 'training_hours'], target='target');TFEmbeddingWrapper_Max50Strategy;MaxAbsScaler();DNN;0.7558720094122828;0.11325489078401105;0.7986361237547163;0.005760756382115574;0.03303587011186165;0.006506876078754949

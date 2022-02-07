@@ -2,6 +2,7 @@ from typing import List, Any, Optional
 
 import numpy as np
 import pandas as pd
+from sklearn import metrics
 from sklearn.model_selection import KFold
 
 from . import model
@@ -18,7 +19,13 @@ class Scorer:
     def __repr__(self) -> str:
         return f"Scorer(scoring_fcts=[{','.join(self.scoring_fcts.keys())}])"
     
-    
+
+def get_base_scorer() -> Scorer:
+    return Scorer(
+        acc=lambda x, y: metrics.accuracy_score(x,y>.5),
+        f1=lambda x, y: metrics.f1_score(x,y>.5),
+        auc=metrics.roc_auc_score,
+    )
     
 def cv_score(pipeline: model.CategoricalPipeline,
              data: pd.DataFrame, 
