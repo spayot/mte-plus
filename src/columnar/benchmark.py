@@ -106,14 +106,14 @@ class BenchmarkRunner:
     def create_reporter(self) -> Report:
         """returns a reporter object, using the logger data"""
         reporter = Report(scorer=self.scorer)
-        reporter.set_columns_to_show(['model', 'transformer'] + list(self.scorer.scoring_fcts.keys()))
+        reporter.set_columns_to_show(['classifier', 'transformer'] + list(self.scorer.scoring_fcts.keys()))
 
         for report_key, report in self.logger.reports.items():
-            transformer_str, model_str = report_key.split(':')
+            transformer_str, clf_str = report_key.split(':')
             config = {'feature_selection': str(self.features), 
                       'transformer': transformer_str, 
                       'scaler': str(self.scaler),
-                      'classifier': model_str}
+                      'classifier': clf_str}
 
             reporter.add_to_report(config, pd.DataFrame(report), show=False)
 

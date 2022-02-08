@@ -1,4 +1,5 @@
 import os
+import time
 
 from lightgbm import LGBMClassifier
 import matplotlib.pyplot as plt
@@ -33,11 +34,15 @@ run = st.sidebar.button("Run Benchmark")
 
 # choose encoders
 encoder_options = {
-        'One Hot': OneHotEncoder(handle_unknown='ignore'),
-        'Ordinal': OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1),
+        'One Hot': lambda f: col.TransformStrategy(f, OneHotEncoder(handle_unknown='ignore')),
+        'Ordinal': lambda f: col.TransformStrategy(f, OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
+        'Embeddings Single': lambda f: col.embeddings.wrapper.TFEmbeddingWrapper(features=f, emb_size_strategy='single'),
+        'Embeddings Max2': lambda f: col.embeddings.wrapper.TFEmbeddingWrapper(features=f, emb_size_strategy='max2'),
+        'Embeddings Max50': lambda f: col.embeddings.wrapper.TFEmbeddingWrapper(features=f, emb_size_strategy='max50'),
+        'MeanTargetEncoder': lambda f: col.MeanTargetEncoder(f),
 }
 
-encoders = stc.create_checkbox_list(st.sidebar, encoder_options, 
+transformers = stc.create_checkbox_list(st.sidebar, encoder_options, 
                                title='Select Benchmark Encoders')
 
 # choose classifiers
@@ -55,7 +60,8 @@ clfs = stc.create_checkbox_list(st.sidebar, clf_options,
 # --- first section: information on task ---
 info1, info2 = st.columns(2)
 
-info1.write("""**Mean Target Encoding (MTE)** is a technique to transform categorical data into numerical by replacing the categorical value by the mean target value for all observations belonging to that category.  The goal of this project is to benchmark the performance of mean target encoding  against multiple encoding strategies for categorical variables in a structured dataset task.  
+info1.write("""**Mean Target Encoding (MTE)** is a technique to transform categorical data into numerical by replacing the categorical value by the mean target value for all observations belonging to that category.  The goal of this project is to benchmark the performance of mean target encoding  against multiple encoding strategies for categorical variables in a structured dataset task.
+**Categorical feature embeddings** are a potentially more expressive generalization of MTE which represents each categorical value as an embedding. embeddings sizes can be defined based on the cardinality of each feature. An embedding of size 1 should replicate closely the principle of MTE, but weights are learnt instead of explicitly defined.
 The benchmark can be run across multiple **binary classification** tasks, and considers multiple types of downstream classifiers.  
 Scoring is focused on Accuracy, F1-score and AUC.
 """)
@@ -107,11 +113,11 @@ print_task_info(summary, task)
 
 # --- define how to run the benchmark ---
     
-def run_benchmark(task, classifiers, encoders):
+def run_benchmark(task, classifiers, transformers):
     
     # initialize log
     logger = stc.StreamlitLogger()
-    logger.log("initializing report")
+    logger.log("Initializing report")
     
     # define scoring metrics of interest
     scorer = col.Scorer(
@@ -120,46 +126,53 @@ def run_benchmark(task, classifiers, encoders):
         auc=metrics.roc_auc_score,
     )
     
-    # initialize reporter
-    reporter = col.Report(scorer=scorer)
-    reporter.set_columns_to_show(['model', 'encoder'] + list(scorer.scoring_fcts.keys()))
+    # # initialize reporter
+    # reporter = col.Report(scorer=scorer)
+    # reporter.set_columns_to_show(['transformer', 'classifier'] + list(scorer.scoring_fcts.keys()))
     
     
-    logger.log("loading data")
+    logger.log("Loading data")
     # load data
     loader = col.DataLoader(root=ROOT_PATH, task=task)
-    df = loader.load_data()
+    data = loader.load_data()
     
     # define cross validation strategy
     kf = KFold(n_splits=5)
     
     # define features to select
-    feature_selection = col.FeatureSelection(**loader.get_selected_features(df))
+    feature_selection = col.FeatureSelection(**loader.get_selected_features(data))
     
     # update task details in the second column of the info section
-    print_task_info(summary, task, df, feature_selection)
+    print_task_info(summary, task, data, feature_selection)
     
-    # ad the MeanTargetEncoder to the list of encoders to evaluate
-    encoders += [col.MeanTargetEncoder(feature_selection)]
     
-    # evaluate each encoder / model pair
-    for model in classifiers:
-        logger.log(f"fitting {model}")
-        for encoder in encoders:
-            pipe = col.CategoricalPipeline(features=feature_selection,
-                                           model=clone(model),
-                                           scaler=MaxAbsScaler(),
-                                           encoder=clone(encoder))
-
-            cv_score = col.cv_score(pipeline=pipe,
-                                    data=df, 
-                                    kf=kf,
-                                    scorer=reporter.scorer)
-
-            reporter.add_to_report(pipe.config, cv_score, show=False)
+    runner = col.benchmark.BenchmarkRunner(features=feature_selection,
+                                           transformers=[transformer(feature_selection) for transformer in transformers],
+                                           classifiers=classifiers,
+                                           scorer = scorer,
+                                          )
+    for i, (train_idx, test_idx) in enumerate(kf.split(data)):
+        
+        logger.log(f"\tRunning benchmark on fold number {i+1}")
+        start = time.time()
+        
+        # split train and test data using the CV fold
+        cv_train, cv_test = data.iloc[train_idx], data.iloc[test_idx]
+        
+        X_train, y_train = feature_selection.select_features(cv_train)
+        X_test, y_test = feature_selection.select_features(cv_test)
+        
+        runner.run(X_train, y_train, X_test, y_test)
+        logger.log(f"\tRunning benchmark on fold number {i+1} - time = {col.utils.convert_time(time.time() - start)}")
+            
+                
+    logger.log("evaluation completed")
+    
+    # generate report
+    reporter = runner.create_reporter()
     
     # plot output
-    logger.log("plotting output")
+    logger.log("Plotting output")
     fig = col.plot_model_encoder_pairs(reporter, title=f"{task} dataset".capitalize(), show=False)
     
     st.write("### Summary Plot")
@@ -167,14 +180,15 @@ def run_benchmark(task, classifiers, encoders):
     
     # display top 5 encoder / classifier pairs
     st.write("### Top 5 Encoder / Classifier Pairs (by F1-score)")
+    print(reporter.columns_to_show)
     st.dataframe(reporter.show().sort_values('f1', ascending=False).head(5))
     
-    logger.log("benchmark completed")
+    logger.log("Benchmark completed")
     
 
 
 if run:
-    run_benchmark(task, clfs, encoders)
+    run_benchmark(task, clfs, transformers)
     
 
     

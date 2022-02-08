@@ -28,7 +28,18 @@ ROOT_PATH = './'
 
 plt.style.use('fivethirtyeight')
 
+
+
+
 def main(args):
+
+
+    CLASSIFIERS = [
+        RandomForestClassifier(n_estimators=100, max_depth=5),
+        LogisticRegression(max_iter=500),
+        KNeighborsClassifier(n_neighbors=10),
+        LGBMClassifier(),
+    ]
     
     print(f"Comparing (model, encoder) pairs for the {args.task} classification task")
     print(f"\tloading dataset")
@@ -51,15 +62,8 @@ def main(args):
     
     reporter = col.Report(scorer=scorer)
     reporter.set_columns_to_show(['classifier', 'transformer'] + list(scorer.scoring_fcts.keys()))
-
-    classifiers = [
-        RandomForestClassifier(n_estimators=100, max_depth=5),
-        LogisticRegression(max_iter=500),
-        KNeighborsClassifier(n_neighbors=10),
-        LGBMClassifier(),
-    ]
-
-    transformers = [
+    
+    TRANSFORMERS = [
         col.MeanTargetEncoder(feature_selection),
         col.TransformStrategy(feature_selection, OneHotEncoder(handle_unknown='ignore')),
         col.TransformStrategy(feature_selection, OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
@@ -67,20 +71,22 @@ def main(args):
         col.embeddings.wrapper.TFEmbeddingWrapper(features=feature_selection, emb_size_strategy='max2'),
         col.embeddings.wrapper.TFEmbeddingWrapper(features=feature_selection, emb_size_strategy='max50'),
     ]
-
+    
     print(f"""\t  5 cross-validation folds
-    \tx {len(transformers)} transformers
-    \tx {len(classifiers)} models 
+    \tx {len(TRANSFORMERS)} transformers
+    \tx {len(CLASSIFIERS)} models 
     \tcombinations to train and test""")
     
+    
+    
     runner = col.benchmark.BenchmarkRunner(features=feature_selection,
-                                           transformers=transformers,
-                                           classifiers=classifiers,
+                                           transformers=TRANSFORMERS,
+                                           classifiers=CLASSIFIERS,
                                            scorer = scorer,
                                           )
     for i, (train_idx, test_idx) in enumerate(kf.split(data)):
         
-        print(f"\tRunning benchmark on fold number {i+1}", end='\r')
+        print(f"\tRunning benchmark on fold number {i+1}") #, end='\r')
         start = time.time()
         
         # split train and test data using the CV fold
@@ -93,7 +99,7 @@ def main(args):
         print(f"\tRunning benchmark on fold number {i+1} - time = {col.utils.convert_time(time.time() - start)}")
             
                 
-    print("evaluation completed")
+    print("Evaluation completed")
     
     reporter = runner.create_reporter()
 

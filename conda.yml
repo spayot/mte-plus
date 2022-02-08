@@ -4,4 +4,8 @@ dependencies:
   - matplotlib
   - numpy
   - scikit-learn
+  - seaborn
   - streamlit
+  - tensorflow
+
+  
