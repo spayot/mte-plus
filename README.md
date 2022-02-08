@@ -39,7 +39,7 @@ A ML Pipeline is built with each categorical encoder / classifier pairs, and tra
 ### 4.1 F1-score comparison
 KNeighborsClassifier                          | LGBMClassifier                               | LogisticRegression | RandomForestClassifier
 :--------------------------------------------:|:---------------------------------------:|:------------------:|:--------------------------------------------:|
-<img src="figures/heatmap_KNeighborsClassifier.png" alt="KNN" height="100"/> | <img src="figures/heatmap_LGBMClassifier.png" alt="LGBM" height="100"/> | <img src="figures/heatmap_LogisticRegression.png" alt="LR" height="100"/> | <img src="figures/heatmap_RandomForestClassifier.png" alt="RF" height="100"/>
+<img src="figures/heatmap_KNeighborsClassifier.png" alt="KNN" height="200"/> | <img src="figures/heatmap_LGBMClassifier.png" alt="LGBM" height="200"/> | <img src="figures/heatmap_LogisticRegression.png" alt="LR" height="200"/> | <img src="figures/heatmap_RandomForestClassifier.png" alt="RF" height="200"/>
 #### Description 
 * Each heatmap represents the average cross validation F1-score obtained on each task (x-axis) with each encoding technique (y-axis).
 * color coding is using the OneHotEncoding / LogisticRegression score as a baseline for each task. Red values indicate superior performance vs baseline, while blue values indicate lower performance.
