@@ -36,13 +36,23 @@ A ML Pipeline is built with each categorical encoder / classifier pairs, and tra
 
 ---
 ## 4. Main Findings
+### 4.1 F1-score comparison
+KNeighborsClassifier                          | LGBMClassifier                               | LogisticRegression | RandomForestClassifier
+:--------------------------------------------:|:---------------------------------------:|:------------------:|:--------------------------------------------:|
+<img src="figures/heatmap_KNeighborsClassifier.png" alt="KNN" height="100"/> | <img src="figures/heatmap_LGBMClassifier.png" alt="LGBM" height="100"/> | <img src="figures/heatmap_LogisticRegression.png" alt="LR" height="100"/> | <img src="figures/heatmap_RandomForestClassifier.png" alt="RF" height="100"/>
+#### Description 
+* Each heatmap represents the average cross validation F1-score obtained on each task (x-axis) with each encoding technique (y-axis).
+* color coding is using the OneHotEncoding / LogisticRegression score as a baseline for each task. Red values indicate superior performance vs baseline, while blue values indicate lower performance.
+#### Findings
+
+
+### 4.2 All results 
+The below charts provide more detailed results at the task level, including standard deviation observed for each metric for each encoder / classifier pairs.
 **Adult Task** ![](figures/adults.png)
 **Mushrooms Task** ![](figures/mushrooms.png)
 **Titanic Task** ![](figures/titanic.png)
 **HR Analytics Task** ![](figures/hr_analytics.png)
 **PetFinder** ![](figures/petfinder.png)
-Mean Target Encoding seem to be the most resilient encoding strategy to classifer choices and performs best with 2 out of the 4 classifier choices.
-
 ---
 ## 5. Install Requirements
 `conda install -n <name> -f conda.yaml`

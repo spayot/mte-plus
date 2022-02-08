@@ -35,7 +35,7 @@ def main(args):
 
 
     CLASSIFIERS = [
-        RandomForestClassifier(n_estimators=100, max_depth=5),
+        RandomForestClassifier(n_estimators=100, max_depth=10),
         LogisticRegression(max_iter=500),
         KNeighborsClassifier(n_neighbors=10),
         LGBMClassifier(),
