@@ -34,12 +34,12 @@ run = st.sidebar.button("Run Benchmark")
 
 # choose encoders
 encoder_options = {
-        'One Hot': lambda f: col.TransformStrategy(f, OneHotEncoder(handle_unknown='ignore')),
-        'Ordinal': lambda f: col.TransformStrategy(f, OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
-        'Embeddings Single': lambda f: col.embeddings.wrapper.TFEmbeddingWrapper(features=f, emb_size_strategy='single'),
-        'Embeddings Max2': lambda f: col.embeddings.wrapper.TFEmbeddingWrapper(features=f, emb_size_strategy='max2'),
-        'Embeddings Max50': lambda f: col.embeddings.wrapper.TFEmbeddingWrapper(features=f, emb_size_strategy='max50'),
-        'MeanTargetEncoder': lambda f: col.MeanTargetEncoder(f),
+        'One Hot': col.TransformStrategy(cat_encoder=OneHotEncoder(handle_unknown='ignore')),
+        'Ordinal': col.TransformStrategy(cat_encoder=OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
+        'Embeddings Single': col.embeddings.wrapper.TFEmbeddingWrapper(emb_size_strategy='single'),
+        'Embeddings Max2': col.embeddings.wrapper.TFEmbeddingWrapper(emb_size_strategy='max2'),
+        'Embeddings Max50': col.embeddings.wrapper.TFEmbeddingWrapper(emb_size_strategy='max50'),
+        'MeanTargetEncoder': col.MeanTargetEncoder(),
 }
 
 transformers = stc.create_checkbox_list(st.sidebar, encoder_options, 
@@ -147,7 +147,7 @@ def run_benchmark(task, classifiers, transformers):
     
     
     runner = col.benchmark.BenchmarkRunner(features=feature_selection,
-                                           transformers=[transformer(feature_selection) for transformer in transformers],
+                                           transformers=transformers,
                                            classifiers=classifiers,
                                            scorer = scorer,
                                           )
@@ -189,10 +189,4 @@ def run_benchmark(task, classifiers, transformers):
 
 if run:
     run_benchmark(task, clfs, transformers)
-    
 
-    
-    # st.write("is this working?")
-    # reporter.save(f'runs/{task}.csv')
-    # figpath = f'figures/{task}.png'
-    # fig.savefig(figpath, transparent=False, facecolor='white')

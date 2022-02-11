@@ -5,7 +5,7 @@ from typing import Optional
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from . import report, model
+from . import report, pipeline
 
 plt.style.use('fivethirtyeight')
 
@@ -15,7 +15,7 @@ def get_ylim_min(df: pd.DataFrame) -> float:
     return ylim_min
     
     
-def plot_model_encoder_pairs(reporter: report.Report, 
+def plot_model_encoder_pairs(reporter: report.Reporter, 
                              metrics: list[str] = None, 
                              figpath: Optional[str] = None,
                              title: Optional[str] = None,
@@ -87,7 +87,7 @@ def _clean_index_column_names(df: pd.DataFrame) -> None:
     
     
     
-def plot_feature_importance(pipe: model.CategoricalPipeline, *args, **kwargs):
+def plot_feature_importance(pipe: pipeline.CategoricalPipeline, *args, **kwargs):
     fi = (pd.Series(pipe.model.feature_importances_, 
                    index=pipe.features.categoricals + pipe.features.numericals)
           .sort_values())

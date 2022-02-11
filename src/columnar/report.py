@@ -7,9 +7,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd            
 
-from . import score, model
+from . import score, pipeline
 
-class Report:
+class Reporter:
     """tracks results of various experiments and allows to produce 
     simple summary reports. each report entry is defined by a config 
     and a set of results.
@@ -31,7 +31,7 @@ class Report:
     
     
     def add_to_report(self, 
-                      config: model.Config, 
+                      config: pipeline.Config, 
                       results: pd.DataFrame, 
                       show: bool = True) -> None:
         """add an entry to the report. each entry is defined by a config and a 

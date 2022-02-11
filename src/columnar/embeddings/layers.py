@@ -15,7 +15,7 @@ from ..utils import set_repr, Repr
 
 
 # define method to choose the size of the embedding based on the cardinality
-EmbSizeStrategyName = Annotated[str, "strategy to define the embedding size, given a categorical features cardinality"]
+EmbSizeStrategyName = Annotated[str, "name of the strategy to implement"]
 
 
 class EmbSizeFactory:
@@ -35,9 +35,9 @@ class EmbSizeFactory:
     
 emb_size_factory = EmbSizeFactory()
 
-emb_size_factory.register_builder('max50', lambda cardinality: min(cardinality // 2, 50))
-emb_size_factory.register_builder('single', lambda cardinality: 1)
-emb_size_factory.register_builder('max2', lambda cardinality: min(cardinality // 2, 2))
+emb_size_factory.register_builder(key='single', builder=lambda cardinality: 1)
+emb_size_factory.register_builder(key='max2', builder=lambda cardinality: min(cardinality // 2, 2))
+emb_size_factory.register_builder(key='max50', builder=lambda cardinality: min(cardinality // 2, 50))
 
 
 
@@ -108,19 +108,6 @@ class TFNormalizationLayer(layers.Layer, Repr):
     def call(self, x):
         """defines the graph to compute outputs from inputs"""
         return self.normalizer(x)
-    
-    
-    
-# class PassThroughLayer(layers.Layer, Repr):
-#     def __init__(self, col_name: DatasetColumn, **kwargs):
-#         super().__init__(**kwargs)
-#         self.col_name = col_name
-        
-#     def adapt(self, datset: tf.data.Dataset) -> None:
-#         pass
-    
-#     def call(self, x: tf.Tensor) -> tf.Tensor:
-#         return x
-    
+
     
         

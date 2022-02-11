@@ -50,7 +50,9 @@ class CategoricalPipeline:
         # fit to the training data
         X, y = self.features.select_features(df)
         
-        self.pipe.fit(X, y, *args, **kwargs)
+        # fit the pipeline (note: all transformers need a FeatureSelection \
+        # object as parameter at fitting time)
+        self.pipe.fit(X, y, transformer__features=self.features, *args, **kwargs)
         
     def predict(self, df: pd.DataFrame) -> np.ndarray:
         """returns predicted probability for `target` to be true for each observation"""

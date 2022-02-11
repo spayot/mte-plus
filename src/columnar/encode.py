@@ -2,19 +2,20 @@
 Defines the CategoricalEncoder Interface as well as the MeanTargetEncoder implementation.
 """
 from abc import ABC, abstractmethod
-from typing import List, Optional, Dict, Protocol
+from typing import Optional, Any
 
 import numpy as np
 import pandas as pd
 from sklearn.base import TransformerMixin
 from sklearn.compose import ColumnTransformer
 
-from . import feature_selection
+from .feature_selection import FeatureSelection, DatasetColumn
+from .utils import set_repr
 
 class Mapper:
     """a Mapper object.
         each attribute"""
-    def add_map(self, column: feature_selection.DatasetColumn, map: Dict[str, float]) -> None:
+    def add_map(self, column: DatasetColumn, map: dict[str, float]) -> None:
         setattr(self, column, map)
         
     def items(self):
@@ -22,47 +23,49 @@ class Mapper:
     
     def __repr__(self) -> str:
         return f"Mapper(cols={list(self.__dict__.keys())})"
-    
 
-class CategoricalEncoder(ABC):
+class CategoricalTransformer(TransformerMixin, ABC):
     """Abstract class for categorical encoders"""
     suffix: str = '_'
+    fitted: bool = False
     @abstractmethod
     def get_params(self, deep: bool):
         pass
     
     @abstractmethod
-    def fit(self, df: pd.DataFrame, y: Optional[pd.Series] = None) -> None:
+    def fit(self, X: pd.DataFrame, y: pd.Series,
+            features: FeatureSelection) -> None:
         pass
     
     @abstractmethod
-    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
-        pass
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+        assert self.fitted == True, "Model needs to be fitted before transformation"
     
-    @abstractmethod
-    def fit_transform(self, df: pd.DataFrame) -> pd.DataFrame:
-        pass
+    def fit_transform(self, X: pd.DataFrame, y: pd.Series,
+            features: FeatureSelection) -> pd.DataFrame:
+        return self.fit(X, y, features).transform(X)
     
 
-class MeanTargetEncoder(CategoricalEncoder):
-    """Allows to apply Mean Target Encoding to categorical """
+class MeanTargetEncoder(CategoricalTransformer):
+    """Applies Mean Target Encoding to categorical data and passes through numerical ones."""
     def __init__(self, 
-                 features: feature_selection.FeatureSelection, 
                  alpha: int = 5):
-        self.mapper : Mapper = Mapper()
-        self.global_mean = None
-        self.features = features
-        self.categoricals = features.categoricals
-        self.target = features.target
-        self.status = 'not_fitted'
+        """"""
         self.alpha = alpha
+        self.mapper : Mapper = Mapper()
+        self.global_mean: float = None
+        self.fitted: bool = False
+        self.features: FeatureSelection = None
+        
 
     def get_params(self, deep: bool):
         """returns the parameters used to initialize this MTE object.
         Note: this method is necessary to integrate MTE into a sklearn Pipeline."""
-        return {'features': self.features, 'alpha': self.alpha}
+        return {'alpha': self.alpha}
 
-    def fit(self, df: pd.DataFrame, y: Optional[pd.Series] = None):
+    
+    def fit(self, X: pd.DataFrame, y: pd.Series,
+            features: FeatureSelection) -> None:
         """creates a mapper object. The mapper is a nested dictionary
         where:
         - keys are categorical column names
@@ -74,68 +77,86 @@ class MeanTargetEncoder(CategoricalEncoder):
         sample 'size'.
         This mapper object can be used to transform a categorical column in a numerical
         one."""
-        if not isinstance(y, pd.Series):
-            y = df[self.target]
 
         self.global_mean = y.mean()
-
-        for col in self.categoricals:
+        self.features = features
+        
+        for col in features.categoricals:
             # Group by the categorical feature and calculate its properties
-            train_groups = y.groupby(df.loc[:,col])
+            train_groups = y.groupby(X.loc[:,col])
             category_sum = train_groups.sum()
             category_size = train_groups.size()
 
             # Calculate smoothed mean target statistics
             train_statistics = (category_sum + self.global_mean * self.alpha) / (category_size + self.alpha)
             self.mapper.add_map(col, train_statistics.to_dict())
-            self.status = 'fitted'
+            
+        self.fitted = True
+            
+        return self
+    
 
-    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         """returns a dataframe similar to the input df, but augmented with
         mean-target encoded categorical features"""
-        assert self.status == 'fitted', "model not fitted"
+        super().transform(X)
         output = pd.DataFrame()
         for col, train_statistics in self.mapper.items():
-            output[col + self.suffix] = df[col].map(train_statistics).fillna(self.global_mean)
+            output[col + self.suffix] = X[col].map(train_statistics).fillna(self.global_mean)
+        
+        # pass through numerical features
         for col in self.features.numericals:
-            output[col] = df[col]
+            output[col] = X[col]
         
         return output
+    
 
-    def fit_transform(self, df: pd.DataFrame,
-                      y: Optional[pd.Series] = None) -> pd.DataFrame:
-        """fit and transform the data in one go."""
-        self.fit(df, y)
-        return self.transform(df)
+#     def fit_transform(self, X: pd.DataFrame, y: pd.Series,
+#                       features: FeatureSelection) -> pd.DataFrame:
+#         """fit and transform the data in one go."""
+        
+#         return self.fit(X, y, features).transform(X)
+    
 
     def get_feature_names(self):
         """Note: necessary method to integrate within Pipeline """
-        return [cat + self.suffix for cat in self.categoricals]
+        return [cat + self.suffix for cat in self.features.categoricals]
 
+    
     def __repr__(self):
-        return f"MeanTargetEncoder(target={self.target}, alpha={self.alpha})"
+        return set_repr(self, ['alpha'])
     
 
     
-class TransformStrategy(TransformerMixin):
-    def __init__(self, features: feature_selection.FeatureSelection, 
-                 cat_encoder: CategoricalEncoder):
-        self.features = features
-        self.cat_encoder = cat_encoder
-        self.transformer = ColumnTransformer(
-            [('categories', cat_encoder, features.categoricals)], 
-            remainder='passthrough')
     
-    def fit(self, X: pd.DataFrame, y: pd.Series=None):
+class TransformStrategy(CategoricalTransformer):
+    """allows to apply a transformation strategy only to
+    categorical columns, while numerical columns are passed through"""
+    def __init__(self, cat_encoder: TransformerMixin):
+        self.features = None
+        self.cat_encoder = cat_encoder
+        self.fitted = False
+        
+    
+    def fit(self, X: pd.DataFrame, y: pd.Series, 
+            features: FeatureSelection):
+        """fits the categorical encoder to the categorical features.
+        creates a passthrough strategy for all other features."""
+        self.features = features
+        self.transformer = ColumnTransformer(
+            [('categories', self.cat_encoder, features.categoricals)], 
+            remainder='passthrough')
+        self.fitted = True
+        
         return self.transformer.fit(X, y)
         
     def transform(self, X: np.ndarray) -> np.ndarray:
         return self.transformer.transform(X)
     
-    def get_params(self, deep: bool = True) -> dict:
+    def get_params(self, deep: bool = True) -> dict[str, Any]:
         # cat_encoder = clone(self.cat_encoder) if deep else self.cat_encoder
         # cat_encoder = self.cat_encoder
-        return {'features': self.features, 'cat_encoder': self.cat_encoder}
+        return {'cat_encoder': self.cat_encoder}
     
     def __repr__(self) -> str:
         return f"TransformStrategy_{self.cat_encoder}()"

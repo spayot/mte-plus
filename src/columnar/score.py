@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn import metrics
 from sklearn.model_selection import KFold
 
-from . import model
+from . import pipeline
 
 class Scorer:
     """defines set of scoring functions to apply."""
@@ -27,7 +27,7 @@ def get_base_scorer() -> Scorer:
         auc=metrics.roc_auc_score,
     )
     
-def cv_score(pipeline: model.CategoricalPipeline,
+def cv_score(pipeline: pipeline.CategoricalPipeline,
              data: pd.DataFrame, 
              kf: Optional[KFold] = None,
              scorer: Optional[Scorer] = None, 

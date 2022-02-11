@@ -1,5 +1,5 @@
 """allows to benchmark the performance of various transformer / classifier pairs
-on a given train and test set."""
+on a given train and test set. Transformations are only done once, while the downstream classifier is trained on each transformed input. This provides a more efficient benchmarking pipeline than fitting a full CategoricalPipeline every single time."""
 
 import numpy as np
 import pandas as pd
@@ -7,7 +7,7 @@ from sklearn.base import TransformerMixin, BaseEstimator, clone
 from sklearn.preprocessing import MaxAbsScaler
 
 from .score import Scorer
-from .report import Report
+from .report import Reporter
 from .feature_selection import FeatureSelection
 from .utils import convert_time
 from .embeddings.wrapper import TFEmbeddingWrapper
@@ -19,8 +19,10 @@ def _get_key(transformer: TransformerMixin,
     return str(transformer) + ':' + str(classifier)
 
 
-class Logger:
-    """logs individual results from a CV test"""
+class CrossValidationLogger:
+    """logs individual results from a Cross Validation test.
+    Keeps Track of which result should be attributed to which 
+    transformer / classifier combination."""
     def __init__(self):
         self.reports = dict()
     
@@ -48,13 +50,13 @@ class BenchmarkRunner:
                  transformers: list[TransformerMixin],
                  classifiers: list[BaseEstimator], 
                  scorer: Scorer,
-                 logger: Logger = None):
+                 logger: CrossValidationLogger = None):
         
         self.features = features
         self.transformers = transformers
         self.scaler = MaxAbsScaler()
         self.classifiers = classifiers
-        self.logger = logger if logger is not None else Logger()
+        self.logger = logger if logger is not None else CrossValidationLogger()
         self.scorer = scorer
         
     def run(self, 
@@ -72,9 +74,7 @@ class BenchmarkRunner:
             transformer = clone(t)
             
             # fit on training data and transform
-            transformer.fit(X_train, y_train)
-            
-            X_train_ = transformer.transform(X_train)
+            X_train_ = transformer.fit_transform(X_train, y_train, self.features)
             X_test_ = transformer.transform(X_test)
             
             # rescale data
@@ -103,9 +103,9 @@ class BenchmarkRunner:
                 self.logger.log_results(transformer, 'DNN', 
                                         results=self.scorer.score(y_test, preds))
                 
-    def create_reporter(self) -> Report:
+    def create_reporter(self) -> Reporter:
         """returns a reporter object, using the logger data"""
-        reporter = Report(scorer=self.scorer)
+        reporter = Reporter(scorer=self.scorer)
         reporter.set_columns_to_show(['classifier', 'transformer'] + list(self.scorer.scoring_fcts.keys()))
 
         for report_key, report in self.logger.reports.items():
