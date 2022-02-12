@@ -46,6 +46,9 @@ class CategoricalTransformer(TransformerMixin, ABC):
         return self.fit(X, y, features).transform(X)
     
 
+    
+    
+    
 class MeanTargetEncoder(CategoricalTransformer):
     """Applies Mean Target Encoding to categorical data and passes through numerical ones."""
     def __init__(self, 
@@ -129,7 +132,7 @@ class MeanTargetEncoder(CategoricalTransformer):
 
     
     
-class TransformStrategy(CategoricalTransformer):
+class FilteredCategoricalTransformer(CategoricalTransformer):
     """allows to apply a transformation strategy only to
     categorical columns, while numerical columns are passed through"""
     def __init__(self, cat_encoder: TransformerMixin):
@@ -154,8 +157,6 @@ class TransformStrategy(CategoricalTransformer):
         return self.transformer.transform(X)
     
     def get_params(self, deep: bool = True) -> dict[str, Any]:
-        # cat_encoder = clone(self.cat_encoder) if deep else self.cat_encoder
-        # cat_encoder = self.cat_encoder
         return {'cat_encoder': self.cat_encoder}
     
     def __repr__(self) -> str:

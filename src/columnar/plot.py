@@ -1,19 +1,19 @@
+
 import math
+import os
 import re
 from typing import Optional
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 
 from . import report, pipeline
 
 plt.style.use('fivethirtyeight')
 
-def get_ylim_min(df: pd.DataFrame) -> float:
-    y_min = df.min().min()
-    ylim_min = max(0, math.floor(10 * y_min - 1) / 10)
-    return ylim_min
-    
+
+
     
 def plot_model_encoder_pairs(reporter: report.Reporter, 
                              metrics: list[str] = None, 
@@ -21,7 +21,7 @@ def plot_model_encoder_pairs(reporter: report.Reporter,
                              title: Optional[str] = None,
                              show: bool = True,
                             ) -> plt.Figure:
-    """plots metrics"""
+    """plots metrics in a bar chart, including error bars"""
     if metrics is None:
         metrics = list(reporter.scorer.scoring_fcts.keys())
     
@@ -32,19 +32,10 @@ def plot_model_encoder_pairs(reporter: report.Reporter,
     fig, axs = plt.subplots(1, len(metrics), figsize=(len(metrics) * 10,5))
     for ax, metric in zip(axs, metrics):
         # create summary view for mean value of this metric during cross validation
-        summary = pd.pivot(reporter.report, index='classifier', columns='transformer', values=metric)
+        summary = _get_summary(reporter.report, metric)
         
         # get std dev of this metric across cross validation
-        err = pd.pivot(reporter.report, index='classifier', columns='transformer', values=metric + '-std')
-        
-        summary = _clean_index_column_names(summary)
-        
-        err = _clean_index_column_names(err)
-        
-        for table in [summary, err]:
-            # clean up column and index names
-            table.columns = [_get_class_name_from_string(col) for col in table.columns]
-            table.index = [_get_class_name_from_string(idx) for idx in table.index]
+        err = _get_summary(reporter.report, metric +'-std')
         
         summary.plot.bar(ax=ax, yerr=err)
         
@@ -78,18 +69,98 @@ def _get_class_name_from_string(string : str) -> str:
     return re.match('[A-Za-z0-9_]+', string).group(0)
 
 def _clean_index_column_names(df: pd.DataFrame) -> None:
+    """helper function to simplify the columns and index names in summary tables"""
     table = df.copy()
     table.columns = [_get_class_name_from_string(col) for col in table.columns]
     table.index = [_get_class_name_from_string(idx) for idx in table.index]
     
     return table
     
+def get_ylim_min(df: pd.DataFrame) -> float:
+    y_min = df.min().min()
+    ylim_min = max(0, math.floor(10 * y_min - 1) / 10)
+    return ylim_min
+
+def _get_summary(df: pd.DataFrame, metric: str):
+    """returns a table with classifier as columns and transformers as rows populated
+    with the metric of interest"""
+    summary = pd.pivot(df, index='classifier', columns='transformer', values=metric)
+    summary = _clean_index_column_names(summary)
+    return summary    
     
     
+    
+#==========================================================================================
+# Feature Importance
+#==========================================================================================
     
 def plot_feature_importance(pipe: pipeline.CategoricalPipeline, *args, **kwargs):
-    fi = (pd.Series(pipe.model.feature_importances_, 
+    """note: only works with pipes with a classifier having a 
+    feature_importances_ class attribute"""
+    fi = (pd.Series(pipe.classifier.feature_importances_, 
                    index=pipe.features.categoricals + pipe.features.numericals)
           .sort_values())
     fi.plot.barh(*args, **kwargs)
     plt.show()
+    
+
+    
+#==========================================================================================
+# Summary Heatmaps 
+#==========================================================================================
+    
+TRANSFORMER_RENAMING = {
+    'MeanTargetEncoder': 'MeanTarget',
+ "TransformStrategy_OneHotEncoder": 'OneHot',
+ "TransformStrategy_OrdinalEncoder": "Ordinal",
+ 'TFEmbeddingWrapper_SingleStrategy': "Embeddings-1dim",
+ 'TFEmbeddingWrapper_Max2Strategy': "Embeddings-Max2",
+ 'TFEmbeddingWrapper_Max50Strategy': "Embeddings-Max50",
+}
+
+
+    
+def plot_heatmap(task, metric, clf, ax, reports_path: str, yticks: bool = False) -> None:
+    """returns a single column heatmap for hte metric of interest."""
+    filepath = os.path.join(reports_path, f'{task}.csv')
+    
+    report = pd.read_csv(filepath, sep=';')
+
+    summary = _get_summary(report, metric).T
+    
+    baseline = summary.loc['TransformStrategy_OneHotEncoder', 'LogisticRegression']
+    
+    summary = summary[[clf]]
+    summary.columns = [f'{task:<10}']
+    summary.index = summary.index.map(TRANSFORMER_RENAMING)
+    
+    delta = .05
+    sns.heatmap(summary, cmap='vlag', annot=True, fmt='.1%', cbar=False, ax=ax, center=baseline, vmin=baseline -delta, vmax=baseline + delta)
+    
+    if not yticks:
+        ax.set_yticklabels([])
+        
+        
+def generate_heatmaps(tasks: list[str], 
+                      metric: str, 
+                      reports_path: str,
+                      figures_path: str,
+                      clfs: list[str] = None) -> None:
+    """generate a heatmap for each separate classifier."""
+    
+    if clfs is None:
+        clfs = ['KNeighborsClassifier', 'LGBMClassifier', 'LogisticRegression', 'RandomForestClassifier']
+    
+    for j, clf in enumerate(clfs):
+        fig, ax = plt.subplots(1,5, figsize=(5,4))
+        
+        for i, task in enumerate(tasks):
+            plot_heatmap(task, metric, clf=clf, ax=ax[i], yticks=(i==0) & (j==0), reports_path=reports_path)
+
+        plt.subplots_adjust(wspace=0, hspace=0)
+        ax[2].set_title(clf)
+
+        # save figure
+        figpath = os.path.join(figures_path, f'heatmap_{metric}_{clf}.png')
+        plt.savefig(figpath, transparent=False, facecolor='white')
+        plt.show()

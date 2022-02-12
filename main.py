@@ -9,84 +9,65 @@ import matplotlib.pyplot as plt
 from sklearn import metrics
 from sklearn.model_selection import KFold
 
-# transforms
-from sklearn.preprocessing import MaxAbsScaler, OneHotEncoder, OrdinalEncoder
-
-# classifiers
-from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import RandomForestClassifier
-from lightgbm import LGBMClassifier
-
-# abstract classes
-from sklearn.base import clone, TransformerMixin, BaseEstimator
-
 # custom library
 from src import columnar as col
 
-ROOT_PATH = './'
-
-plt.style.use('fivethirtyeight')
 
 
 
 
-def main(args):
-
-
-    CLASSIFIERS = [
-        RandomForestClassifier(n_estimators=100, max_depth=10),
-        LogisticRegression(max_iter=500),
-        KNeighborsClassifier(n_neighbors=10),
-        LGBMClassifier(),
-    ]
+def main(task: str, configpath: str):
+    """runs a 5-task classification benchmark on all transformer / classifier
+    pairs (incl. 5 transformers and 4 classifiers). The benchmark is run
+    using a 5-fold cross validation strategy.
     
-    print(f"Comparing (model, encoder) pairs for the {args.task} classification task")
-    print(f"\tloading dataset")
+    Args:
+        task (str): name of the task to run the benchmark on.
+            currently supports 'petfinder', 'hr_analytics', 'adults',
+            'mushrooms' and 'titanic'
+        config (str): path to the config file defining the benchmark configuration"""
+    
+    cfg = col.config.BenchmarkConfig.load(configpath)
+    
+    # setup matplotlib style for figures
+    plt.style.use(cfg.plot.style)
+    
+    print(f"Comparing (model, encoder) pairs for the {task} classification task")
+    
     # load data
-    loader = col.DataLoader(root=ROOT_PATH, task=args.task)
+    print(f"\tloading dataset")
+    loader = col.DataLoader(root=cfg.paths.root, task=task)
     data = loader.load_data()
     
     # define scoring metrics of interest
-    scorer = col.Scorer(
-        acc=lambda x, y: metrics.accuracy_score(x,y>.5),
-        f1=lambda x, y: metrics.f1_score(x,y>.5),
-        auc=metrics.roc_auc_score,
-    )
+    scorer = col.Scorer(**col.config.get_metrics_from_config(cfg))
 
     # define cross validation strategy
-    kf = KFold(n_splits=5)
+    kf = KFold(n_splits=cfg.cross_validation.n_splits)
     
     # define features to select
     feature_selection = col.FeatureSelection(**loader.get_selected_features(data))
     
-    reporter = col.Report(scorer=scorer)
-    reporter.set_columns_to_show(['classifier', 'transformer'] + list(scorer.scoring_fcts.keys()))
+    # get transformers and classifiers from config file
+    transformers = col.config.get_transformers_from_config(cfg)
+    classifiers = col.config.get_classifiers_from_config(cfg)
     
-    TRANSFORMERS = [
-        col.MeanTargetEncoder(feature_selection),
-        col.TransformStrategy(feature_selection, OneHotEncoder(handle_unknown='ignore')),
-        col.TransformStrategy(feature_selection, OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
-        col.embeddings.wrapper.TFEmbeddingWrapper(features=feature_selection, emb_size_strategy='single'),
-        col.embeddings.wrapper.TFEmbeddingWrapper(features=feature_selection, emb_size_strategy='max2'),
-        col.embeddings.wrapper.TFEmbeddingWrapper(features=feature_selection, emb_size_strategy='max50'),
-    ]
     
-    print(f"""\t  5 cross-validation folds
-    \tx {len(TRANSFORMERS)} transformers
-    \tx {len(CLASSIFIERS)} models 
+    print(f"""\t  {cfg.cross_validation.n_splits} cross-validation folds
+    \tx {len(transformers)} transformers
+    \tx {len(classifiers)} models 
     \tcombinations to train and test""")
     
     
-    
-    runner = col.benchmark.BenchmarkRunner(features=feature_selection,
-                                           transformers=TRANSFORMERS,
-                                           classifiers=CLASSIFIERS,
-                                           scorer = scorer,
-                                          )
+    # initialize benchmark runner
+    runner = col.BenchmarkRunner(features=feature_selection,
+                                 transformers=transformers,
+                                 classifiers=classifiers,
+                                 scorer = scorer,
+                                )
     for i, (train_idx, test_idx) in enumerate(kf.split(data)):
         
-        print(f"\tRunning benchmark on fold number {i+1}") #, end='\r')
+        print(f"\tRunning benchmark on fold number {i+1} / {cfg.cross_validation.n_splits}", end='\r')
         start = time.time()
         
         # split train and test data using the CV fold
@@ -96,7 +77,7 @@ def main(args):
         X_test, y_test = feature_selection.select_features(cv_test)
         
         runner.run(X_train, y_train, X_test, y_test)
-        print(f"\tRunning benchmark on fold number {i+1} - time = {col.utils.convert_time(time.time() - start)}")
+        print(f"\tRunning benchmark on fold number {i+1} / {cfg.cross_validation.n_splits} - time = {col.utils.convert_time(time.time() - start)}")
             
                 
     print("Evaluation completed")
@@ -105,13 +86,13 @@ def main(args):
 
     
     # saving report as csv
-    save_path = f'runs/{args.task}.csv'
-    reporter.save(os.path.join(ROOT_PATH, save_path))
+    save_path = os.path.join(cfg.paths.root, cfg.paths.reports, f'{task}.csv')
+    reporter.save(save_path)
     print(f"results summary saved in {save_path}")
     
     # saving summary plot model
-    figpath = f'figures/{args.task}.png'
-    fig = col.plot_model_encoder_pairs(reporter, figpath=os.path.join(ROOT_PATH, figpath), title=f"{args.task} dataset".capitalize())
+    figpath = os.path.join(cfg.paths.root, cfg.paths.figures, f'{task}.png')
+    fig = col.plot_model_encoder_pairs(reporter, figpath=figpath, title=f"{task} dataset".capitalize())
     print(f"visualization saved in {figpath}")
     
     return reporter
@@ -121,9 +102,14 @@ def main(args):
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-t", "--task", help="the dataset and classification task to evaluate categorical encoders and models against",
+    parser.add_argument("-t", "--task", 
+                        help="the dataset and classification task to evaluate categorical encoders and models against",
                         type=str)
+    parser.add_argument("-c", "--configpath", 
+                        default='./config.yml', 
+                        nargs='?', 
+                        type=str, 
+                        help="the path to the YML file defining the benchmark configuration")
 
     args = parser.parse_args()
-
-    reporter = main(args)
+    reporter = main(args.task, args.configpath)

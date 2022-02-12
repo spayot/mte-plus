@@ -39,11 +39,11 @@ A ML Pipeline is built with each categorical encoder / classifier pairs, and tra
 ### 4.1 F1-score comparison
 KNeighborsClassifier                          | LGBMClassifier                               | LogisticRegression | RandomForestClassifier
 :--------------------------------------------:|:---------------------------------------:|:------------------:|:--------------------------------------------:|
-<img src="figures/heatmap_KNeighborsClassifier.png" alt="KNN" height="150"/> | <img src="figures/heatmap_LGBMClassifier.png" alt="LGBM" height="150"/> | <img src="figures/heatmap_LogisticRegression.png" alt="LR" height="150"/> | <img src="figures/heatmap_RandomForestClassifier.png" alt="RF" height="150"/>
+<img src="figures/heatmap_f1_KNeighborsClassifier.png" alt="KNN" height="150"/> | <img src="figures/heatmap_f1_LGBMClassifier.png" alt="LGBM" height="150"/> | <img src="figures/heatmap_f1_LogisticRegression.png" alt="LR" height="150"/> | <img src="figures/heatmap_f1_RandomForestClassifier.png" alt="RF" height="150"/>
 
 #### Description 
 * Each heatmap represents the average cross validation F1-score obtained on each task (x-axis) with each encoding technique (y-axis).
-* color coding is using the OneHotEncoding + LogisticRegression score as a baseline for each task. Red values indicate performance superior to baseline, while blue values indicate lower performance.
+* color coding uses the OneHotEncoding + LogisticRegression score as a baseline for each task. Red values indicate performance superior to baseline, while blue values indicate lower performance.
 
 #### Findings
 - Some classifiers are more sensitive to the encoding technique than others. LGBM from that perspective offers both the benefits of limited sensitivity and high level performance.
@@ -52,6 +52,7 @@ KNeighborsClassifier                          | LGBMClassifier                  
 
 
 ### 4.2 All results 
+
 The below charts provide more detailed results at the task level, including standard deviation observed for each metric for each encoder / classifier pairs.
 **Adult Task** ![](figures/adults.png)
 **Mushrooms Task** ![](figures/mushrooms.png)
@@ -60,19 +61,21 @@ The below charts provide more detailed results at the task level, including stan
 **PetFinder** ![](figures/petfinder.png)
 ---
 ## 5. Install Requirements
-`conda install -n <name> -f conda.yaml`
+`conda install -n <name> -f conda.yml`
 
 ---
 ## 6. Reproducing Experiments
 ### 6.1 through Scripts
 the user can simply run the following command:  
   
-  `python main.py --task <task_name>`  
+  `python main.py --task <task_name> [-c config.yml]`  
   
 This command will evaluate the performance of various encoder / classifier combinations and generate:
-- a CSV report in the `runs/` folder
+- a CSV report in the `reports/` folder
 - a summary figure in the `figures/` folder.
 Both new artifacts are named after the prediction task used to evaluate the pipelines.
+
+All core configuration parameters to run the benchmark can be found and edited in the `config.yml` file.
 
 ### 6.2 using a Streamlit App
 Allows to run the benchmark while selecting:

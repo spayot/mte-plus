@@ -11,7 +11,7 @@ from .report import Reporter
 from .feature_selection import FeatureSelection
 from .utils import convert_time
 from .embeddings.wrapper import TFEmbeddingWrapper
-from .embeddings.data import df_to_dataset
+from .config import BenchmarkConfig
 
 
 def _get_key(transformer: TransformerMixin, 
@@ -97,7 +97,7 @@ class BenchmarkRunner:
             # add an extra evaluation with original DNN for TFEmbedding Wrappers
             if transformer.__class__ == TFEmbeddingWrapper:
                 # get predictions
-                preds = transformer.model.predict(df_to_dataset(X_test, shuffle=False))
+                preds = transformer.predict_class_from_df(X_test)
                 
                 # log results
                 self.logger.log_results(transformer, 'DNN', 
@@ -118,3 +118,5 @@ class BenchmarkRunner:
             reporter.add_to_report(config, pd.DataFrame(report), show=False)
 
         return reporter
+
+    

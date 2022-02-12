@@ -6,7 +6,6 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd 
-from sklearn.base import TransformerMixin
 import tensorflow as tf
 
 from ..encode import CategoricalTransformer
@@ -88,6 +87,9 @@ class TFEmbeddingWrapper(CategoricalTransformer):
         
         return np.concatenate([num_features, cat_features], axis=1)
     
+    
+    def predict_class_from_df(self, X: pd.DataFrame) -> np.ndarray:
+        return self.model.predict(df_to_dataset(X, shuffle=False))
     
     def __repr__(self) -> str:
         return f"TFEmbeddingWrapper_{self.emb_size_strategy.capitalize()}Strategy()"

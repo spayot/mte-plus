@@ -1,0 +1,39 @@
+# Configuration File for tests (smaller set of transformers tested, fewer CV folds)
+paths:
+    root: ./
+    figures: tmp/  # relative to root path
+    reports: tmp/     # relative to root path
+
+metrics:
+    include_acc: True
+    include_f1: True
+    include_auc: True
+
+classifiers:
+    rf__n_estimators: 100 # rf: random forest classifier
+    rf__max_depth: 10
+    lr__max_iter: 500     # lr: logistic regression 
+    knn__n_neighbors: 10  # knn: K-nearest neighbors
+# note: lgbms are not parameterized through this config file at the time being
+    
+transformers:
+    include_mte: True
+    include_onehot: True
+    include_ordinal: True
+    include_tfembeddings_single: False
+    include_tfembeddings_max2: False
+    include_tfembeddings_max50: False
+    tfclassifier__hidden_size: int = 32 # not passed through yet
+    tfclassifier__dropout_rate: float = .5 # not passed through yet
+    mte__alpha: 5
+
+cross_validation:
+    n_splits: 3
+
+fit_params:
+    tf__epochs: 3  # not passed through yet
+    tf__verbose: 1 # not passed through yet
+    
+plot:
+    style: fivethirtyeight
+        

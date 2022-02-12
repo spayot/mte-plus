@@ -2,8 +2,8 @@
 Defines the CategoricalPipeline Class, which allows to define a 4-steps pipeline for structured columnar datasets:
 - feature selection: defining the target column as well as categorical and numerical columns to use as features for prediction
 - categorical encoder: transforms categorical data into numerical ones
-- scaler (optional): rescales the data
-- model : a classifier to apply to the dataset.
+- scaler (optional): rescales the data (necessary for distance based classifiers)
+- classifier : a classifier to apply to the dataset.
 """
 from typing import Callable, List, Optional, Tuple, Any
 
@@ -28,12 +28,12 @@ class CategoricalPipeline:
                  features: feature_selection.FeatureSelection,
                  transformer: TransformerMixin,
                  scaler: Optional[TransformerMixin] = None,
-                 model: Optional[BaseEstimator] = None, 
+                 classifier: Optional[BaseEstimator] = None, 
                 ):
         self.features = features
         self.transformer = transformer # the encoding strategy, defines how each column should be transformed
         self.scaler = scaler # a scaling layer
-        self.model = model
+        self.classifier = classifier
         
         
         steps = [
@@ -67,7 +67,7 @@ class CategoricalPipeline:
             features = self.features,
             transformer = clone(self.transformer),
             scaler = None if self.scaler is None else clone(self.scaler),
-            model = clone(self.model),
+            classifier = clone(self.classifier),
         )
         
     
@@ -82,5 +82,5 @@ class CategoricalPipeline:
         features={self.features},
         transformer={self.transformer},
         scaler={self.scaler},
-        model={self.model}),   
+        classifier={self.classifier}),   
         """

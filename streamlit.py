@@ -34,11 +34,11 @@ run = st.sidebar.button("Run Benchmark")
 
 # choose encoders
 encoder_options = {
-        'One Hot': col.TransformStrategy(cat_encoder=OneHotEncoder(handle_unknown='ignore')),
-        'Ordinal': col.TransformStrategy(cat_encoder=OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
-        'Embeddings Single': col.embeddings.wrapper.TFEmbeddingWrapper(emb_size_strategy='single'),
-        'Embeddings Max2': col.embeddings.wrapper.TFEmbeddingWrapper(emb_size_strategy='max2'),
-        'Embeddings Max50': col.embeddings.wrapper.TFEmbeddingWrapper(emb_size_strategy='max50'),
+        'One Hot': col.FilteredCategoricalTransformer(cat_encoder=OneHotEncoder(handle_unknown='ignore')),
+        'Ordinal': col.FilteredCategoricalTransformer(cat_encoder=OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
+        'Embeddings Single': col.embeddings.TFEmbeddingWrapper(emb_size_strategy='single'),
+        'Embeddings Max2': col.embeddings.TFEmbeddingWrapper(emb_size_strategy='max2'),
+        'Embeddings Max50': col.embeddings.TFEmbeddingWrapper(emb_size_strategy='max50'),
         'MeanTargetEncoder': col.MeanTargetEncoder(),
 }
 
@@ -60,7 +60,7 @@ clfs = stc.create_checkbox_list(st.sidebar, clf_options,
 # --- first section: information on task ---
 info1, info2 = st.columns(2)
 
-info1.write("""**Mean Target Encoding (MTE)** is a technique to transform categorical data into numerical by replacing the categorical value by the mean target value for all observations belonging to that category.  The goal of this project is to benchmark the performance of mean target encoding  against multiple encoding strategies for categorical variables in a structured dataset task.
+info1.write("""**Mean Target Encoding (MTE)** is a technique to transform categorical data into numerical by replacing the categorical value by the mean target value for all observations belonging to that category.  The goal of this project is to benchmark the performance of mean target encoding  against multiple encoding strategies for categorical variables in a structured dataset task.  
 **Categorical feature embeddings** are a potentially more expressive generalization of MTE which represents each categorical value as an embedding. embeddings sizes can be defined based on the cardinality of each feature. An embedding of size 1 should replicate closely the principle of MTE, but weights are learnt instead of explicitly defined.
 The benchmark can be run across multiple **binary classification** tasks, and considers multiple types of downstream classifiers.  
 Scoring is focused on Accuracy, F1-score and AUC.
@@ -180,7 +180,6 @@ def run_benchmark(task, classifiers, transformers):
     
     # display top 5 encoder / classifier pairs
     st.write("### Top 5 Encoder / Classifier Pairs (by F1-score)")
-    print(reporter.columns_to_show)
     st.dataframe(reporter.show().sort_values('f1', ascending=False).head(5))
     
     logger.log("Benchmark completed")

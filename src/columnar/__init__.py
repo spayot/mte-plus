@@ -3,8 +3,9 @@ from . import loaders, embeddings
 # import modules
 from . import feature_selection, load, encode, pipeline, report, plot, benchmark, utils
 
+from .config import BenchmarkConfig
 from .feature_selection import FeatureSelection
-from .encode import MeanTargetEncoder, TransformStrategy, CategoricalTransformer
+from .encode import MeanTargetEncoder, FilteredCategoricalTransformer
 from .pipeline import CategoricalPipeline
 from .benchmark import BenchmarkRunner
 from .report import Reporter
