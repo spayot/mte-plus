@@ -29,8 +29,12 @@ We considered in this project 3 embedding sizing strategies (referred through th
 | `max50` | $dim_{emb}(f)=min(50,cardinality(f)// 2)$ |
 | `max2` | $dim_{emb}(f)=min(2,cardinality(f)//2)$|
 
+In practice, the embeddings are learnt through back-propagation, by fitting a neural network with a simple classifier head on the training data (supervised). the embeddings can then be used to transform the input data in a way that can be consumed by any downstream classifier, and compared with other transformation techniques.
 
 * Implementation: **CUSTOM**: [`columnar.embeddings.wrapper.TFEmbeddingWrapper`](./src/columnar/embeddings/wrapper.py)
+* Reference: [Brebisson, A & al. (2015). Artificial neural networks applied to
+taxi destination prediction](https://arxiv.org/pdf/1508.00021.pdf)
+
 ---
 ## 3. Tasks
 
