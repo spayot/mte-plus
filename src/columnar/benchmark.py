@@ -10,8 +10,10 @@ from .score import Scorer
 from .report import Reporter
 from .feature_selection import FeatureSelection
 from .utils import convert_time
-from .embeddings.wrapper import TFEmbeddingWrapper
+from .embeddings.wrapper import MonoEmbeddings
 from .config import BenchmarkConfig
+from .transform.composite import CompositeTransformer, SimpleCompositeTransformer
+from .transform.mono import MonoTransformer
 
 
 def _get_key(transformer: TransformerMixin, 
@@ -47,13 +49,13 @@ class CrossValidationLogger:
 class BenchmarkRunner:
     def __init__(self, 
                  features: FeatureSelection,
-                 transformers: list[TransformerMixin],
+                 cat_transformers: list[MonoTransformer],
                  classifiers: list[BaseEstimator], 
                  scorer: Scorer,
                  logger: CrossValidationLogger = None):
         
         self.features = features
-        self.transformers = transformers
+        self.cat_transformers = cat_transformers
         self.scaler = MaxAbsScaler()
         self.classifiers = classifiers
         self.logger = logger if logger is not None else CrossValidationLogger()
@@ -69,12 +71,12 @@ class BenchmarkRunner:
         Results are logged into the object's logger.
         """
         
-        for t in self.transformers:
+        for t in self.cat_transformers:
             # initialize transformer
-            transformer = clone(t)
+            transformer = SimpleCompositeTransformer(clone(t), features=self.features)
             
             # fit on training data and transform
-            X_train_ = transformer.fit_transform(X_train, y_train, self.features)
+            X_train_ = transformer.fit_transform(X_train, y_train)
             X_test_ = transformer.transform(X_test)
             
             # rescale data
@@ -95,9 +97,9 @@ class BenchmarkRunner:
                                         results=self.scorer.score(y_test, preds))
                 
             # add an extra evaluation with original DNN for TFEmbedding Wrappers
-            if transformer.__class__ == TFEmbeddingWrapper:
+            if transformer.cat_transformer.__class__ == MonoEmbeddings:
                 # get predictions
-                preds = transformer.predict_class_from_df(X_test)
+                preds = transformer.cat_transformer.predict_class_from_df(X_test)
                 
                 # log results
                 self.logger.log_results(transformer, 'DNN', 
@@ -118,5 +120,3 @@ class BenchmarkRunner:
             reporter.add_to_report(config, pd.DataFrame(report), show=False)
 
         return reporter
-
-    

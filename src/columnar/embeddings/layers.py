@@ -11,34 +11,8 @@ import tensorflow as tf
 from tensorflow.keras import layers
 
 from ..feature_selection import DatasetColumn
-from ..utils import set_repr, Repr
-
-
-# define method to choose the size of the embedding based on the cardinality
-EmbSizeStrategyName = Annotated[str, "name of the strategy to implement"]
-
-
-class EmbSizeFactory:
-    def __init__(self):
-        self._builders = {}
-
-    def register_builder(self, 
-                         key: EmbSizeStrategyName, 
-                         builder: Callable[[int], int]):
-        self._builders[key] = builder
-
-    def calculate_emb_size(self, key, cardinality):
-        builder = self._builders.get(key)
-        if not builder:
-            raise ValueError(key)
-        return builder(cardinality)
-    
-emb_size_factory = EmbSizeFactory()
-
-emb_size_factory.register_builder(key='single', builder=lambda cardinality: 1)
-emb_size_factory.register_builder(key='max2', builder=lambda cardinality: min(cardinality // 2, 2))
-emb_size_factory.register_builder(key='max50', builder=lambda cardinality: min(cardinality // 2, 50))
-
+from ..utils import set_repr
+from .emb_size import emb_size_factory, EmbSizeStrategyName
 
 
 def _get_dtype(ds: tf.data.Dataset, header: str):
@@ -63,7 +37,9 @@ class TFEmbeddingLayer(layers.Layer):
     
     @tf.autograph.experimental.do_not_convert
     def adapt(self, dataset: tf.data.Dataset) -> None:
-        """creates embedding"""
+        """build vocabulary and creates embeddings layer for 
+        the column of interest."""
+        
         dtype = _get_dtype(dataset, self.col_name)
         lookup = layers.StringLookup if dtype == tf.string else layers.IntegerLookup
         self.index = lookup(num_oov_indices=1, name=self.col_name)
@@ -91,7 +67,7 @@ class TFEmbeddingLayer(layers.Layer):
     
     
 
-class TFNormalizationLayer(layers.Layer, Repr):
+class TFNormalizationLayer(layers.Layer):
     def __init__(self, col_name: DatasetColumn,
                  **kwargs):
         super().__init__(**kwargs)
@@ -108,6 +84,9 @@ class TFNormalizationLayer(layers.Layer, Repr):
     def call(self, x):
         """defines the graph to compute outputs from inputs"""
         return self.normalizer(x)
+    
+    def __repr__(self) -> str:
+        return set_repr(self, ['col_name'])
 
     
         

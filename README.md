@@ -16,7 +16,7 @@ Ordinal Encoding simply replaces categorical values with integers, based on alph
 * Implementation: `sklearn.preprocessing.OrdinalEncoder`
 
 ### 2.3 Mean Target Encoding (MTE)
-**Mean Target Encoding (MTE)** also preserves the input's dimensionality but replaces the categorical value by the mean target value for all observations belonging to that category. 
+**Mean Target Encoding (MTE)** also preserves the input's dimensionality but replaces the categorical value by the mean target value for all observations belonging to that category in the training set. 
 * Implementation: **CUSTOM**: [`columnar.encode.MeanTargetEncoder`](./src/columnar/encode.py)
 
 ### 2.4 Categorical Feature Embeddings
@@ -150,3 +150,4 @@ You can find examples of `_load` and `_select_features(df)` functions here:
   - [x] $dim_{emb}(f) = min(50, cardinality(f)// 2)$ (`max50`)
   - [x] $dim_{emb}(f) = min(2, cardinality(f) // 2)$ (`max2`)
 - [x] build streamlit app to explore various benchmarking options.
+- [ ] revert back to defining categorical columns at instantiation time.

@@ -16,18 +16,18 @@ from sklearn import metrics
 
 # project-specific transformers
 from .config import BenchmarkConfig
-from ..encode import MeanTargetEncoder, FilteredCategoricalTransformer
-from ..embeddings import TFEmbeddingWrapper
+from ..transform import mono
+from ..embeddings import MonoEmbeddings
 
 
 def get_transformers_from_config(cfg: BenchmarkConfig) -> list[TransformerMixin]:
     TRANSFORMER_OPTIONS = {
-        'onehot': FilteredCategoricalTransformer(cat_encoder=OneHotEncoder(handle_unknown='ignore')),
-        'ordinal': FilteredCategoricalTransformer(cat_encoder=OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
-        'tfembeddings_single': TFEmbeddingWrapper(emb_size_strategy='single'),
-        'tfembeddings_max2': TFEmbeddingWrapper(emb_size_strategy='max2'),
-        'tfembeddings_max50': TFEmbeddingWrapper(emb_size_strategy='max50'),
-        'mte': MeanTargetEncoder(alpha=cfg.transformers.mte__alpha),
+        'onehot': mono.MonoFromSklearn(OneHotEncoder(handle_unknown='ignore')),
+        'ordinal': mono.MonoFromSklearn(OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
+        'tfembeddings_single': MonoEmbeddings(emb_size_strategy='single'),
+        'tfembeddings_max2': MonoEmbeddings(emb_size_strategy='max2'),
+        'tfembeddings_max50': MonoEmbeddings(emb_size_strategy='max50'),
+        'mte': mono.MeanTargetEncoder(alpha=cfg.transformers.mte__alpha),
     }
     transformers = []
     for name, transformer in TRANSFORMER_OPTIONS.items():

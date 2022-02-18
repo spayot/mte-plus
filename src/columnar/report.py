@@ -87,7 +87,7 @@ class Reporter:
     
     
     def __repr__(self) -> str:
-        return f"""Report(
+        return f"""Reporter(
         scorer: {self.scorer}, 
         to_show: [{','.join(self.columns_to_show)}]
         )"""
