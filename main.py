@@ -61,7 +61,7 @@ def main(task: str, configpath: str):
     
     # initialize benchmark runner
     runner = col.BenchmarkRunner(features=feature_selection,
-                                 transformers=transformers,
+                                 cat_transformers=transformers,
                                  classifiers=classifiers,
                                  scorer = scorer,
                                 )
@@ -86,7 +86,12 @@ def main(task: str, configpath: str):
 
     
     # saving report as csv
-    save_path = os.path.join(cfg.paths.root, cfg.paths.reports, f'{task}.csv')
+    save_directory = os.path.join(cfg.paths.root, cfg.paths.reports)
+    if not os.path.exists(save_directory):
+        os.mkdir(save_directory)
+        print(f"{save_directory} path created")
+        
+    save_path = os.path.join(save_directory, f'{task}.csv')
     reporter.save(save_path)
     print(f"results summary saved in {save_path}")
     

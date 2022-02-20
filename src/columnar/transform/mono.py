@@ -68,7 +68,10 @@ class MeanTargetEncoder(MonoTransformer):
     """Applies Mean Target Encoding to selected columns in a dataset.
     """
     def __init__(self, alpha: int = 5):
-        """"""
+        """
+        Args:
+            alpha: a smoothing parameter corresponding to a global sample size
+        """
         self.alpha : int = alpha
         self.mapper : MTEMapper = MTEMapper()
         self.global_mean: float = None

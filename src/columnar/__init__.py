@@ -1,7 +1,7 @@
 # import subpackages
 from . import loaders, embeddings
 # import modules
-from . import feature_selection, load, encode, pipeline, report, plot, benchmark, utils, transform
+from . import feature_selection, load, pipeline, report, plot, benchmark, utils, transform, config
 
 from .config import BenchmarkConfig
 from .feature_selection import FeatureSelection

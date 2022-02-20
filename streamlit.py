@@ -14,6 +14,7 @@ from sklearn.preprocessing import MaxAbsScaler, OneHotEncoder, OrdinalEncoder
 import streamlit as st
 
 import src.columnar as col
+from src.columnar import transform, embeddings
 import src.streamlit_components as stc
 
 ROOT_PATH = './'
@@ -33,16 +34,17 @@ task = st.sidebar.selectbox("Select a Task", task_options)
 run = st.sidebar.button("Run Benchmark")
 
 # choose encoders
-encoder_options = {
-        'One Hot': col.FilteredCategoricalTransformer(cat_encoder=OneHotEncoder(handle_unknown='ignore')),
-        'Ordinal': col.FilteredCategoricalTransformer(cat_encoder=OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
-        'Embeddings Single': col.embeddings.TFEmbeddingWrapper(emb_size_strategy='single'),
-        'Embeddings Max2': col.embeddings.TFEmbeddingWrapper(emb_size_strategy='max2'),
-        'Embeddings Max50': col.embeddings.TFEmbeddingWrapper(emb_size_strategy='max50'),
-        'MeanTargetEncoder': col.MeanTargetEncoder(),
-}
+TRANSFORMER_OPTIONS = {
+        'One Hot': transform.mono.MonoFromSklearn(OneHotEncoder(handle_unknown='ignore')),
+        'Ordinal': transform.mono.MonoFromSklearn(OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)),
+        'Embeddings Single': embeddings.MonoEmbeddings(emb_size_strategy='single'),
+        'Embeddings Max2': embeddings.MonoEmbeddings(emb_size_strategy='max2'),
+        'Embeddings Max50': embeddings.MonoEmbeddings(emb_size_strategy='max50'),
+        'MeanTargetEncoder': transform.mono.MeanTargetEncoder(alpha=5),
+    }
 
-transformers = stc.create_checkbox_list(st.sidebar, encoder_options, 
+
+transformers = stc.create_checkbox_list(st.sidebar, TRANSFORMER_OPTIONS, 
                                title='Select Benchmark Encoders')
 
 # choose classifiers

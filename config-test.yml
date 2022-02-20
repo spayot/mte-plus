@@ -21,7 +21,7 @@ transformers:
     include_onehot: True
     include_ordinal: True
     include_tfembeddings_single: False
-    include_tfembeddings_max2: False
+    include_tfembeddings_max2: True
     include_tfembeddings_max50: False
     tfclassifier__hidden_size: int = 32 # not passed through yet
     tfclassifier__dropout_rate: float = .5 # not passed through yet
