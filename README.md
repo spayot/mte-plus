@@ -50,7 +50,7 @@ You can find examples of `_load` and `_select_features(df)` functions here:
 
 ---
 
-## 4. Benchmarking strategy
+## 5. Benchmarking strategy
 A ML Pipeline is built with each categorical encoder / classifier pairs, and trained on the task at hand. Evaluation is performed through a 5-fold cross validation strategy, to extract mean and std dev values for each metric of interest.   
 **Pipeline Overview**![](figures/pipeline.png)
 *`*` sklearn component*  *`**` LightGBM component*  
@@ -58,21 +58,21 @@ A ML Pipeline is built with each categorical encoder / classifier pairs, and tra
 
 ---
 
-## 5. Categorical Encoding Techniques 
-### 5.1 Baseline 1: Ordinal Encoding
+## 6. Categorical Encoding Techniques 
+### 6.1 Baseline 1: Ordinal Encoding
 Ordinal Encoding simply replaces categorical values with integers, based on alphabetical order. Its transformation preserves the inputs dimensionality but the numerical representation is quite "naive".
 * Implementation: `sklearn.preprocessing.OrdinalEncoder`
 
-### 5.2 Baseline 2: One Hot Encoding (OHE)
+### 6.2 Baseline 2: One Hot Encoding (OHE)
 Probably the most commonly used technique. OHE consists in creating a new binary feature for each categorical unique value. 
 It provides quite a bit of flexibility for the downstream classifier to learn from the dataset, but at the expense of a very high dimensionality and sparse transformation of the input features ($\sum_fcardinality(f)$).
 * Implementation: `sklearn.preprocessing.OneHotEncoder`
 
-### 5.3 Mean Target Encoding (MTE)
+### 6.3 Mean Target Encoding (MTE)
 **Mean Target Encoding (MTE)** also preserves the input's dimensionality but replaces the categorical value by the mean target value for all observations belonging to that category in the training set. 
 * Implementation: **CUSTOM**: [`columnar.transform.mono.MeanTargetEncoder`](./src/columnar/transform/mono.py)
 
-### 5.4 Categorical Feature Embeddings
+### 6.4 Categorical Feature Embeddings
 **Categorical feature embeddings** are a potentially more expressive generalization of MTE which represents each categorical value as a multi-dimensional embedding. embeddings sizes can be defined based on the cardinality of each feature. An embedding of size 1 should replicate closely the principle of MTE, but weights are learnt instead of explicitly defined.
 We considered in this project 3 embedding sizing strategies (referred through the class ). For any categorical feature $f$, the embedding dimensionality can be defined as:
 
@@ -89,7 +89,7 @@ In practice, the embeddings are learnt through back-propagation, by fitting a ne
 taxi destination prediction](https://arxiv.org/pdf/1508.00021.pdf)
 
 ---
-## 6. Tasks
+## 7. Tasks
 5 binary classification tasks with relatively limited number of samples, and various cardinality levels.
 
 
@@ -101,31 +101,31 @@ taxi destination prediction](https://arxiv.org/pdf/1508.00021.pdf)
 | HR Analytics | 19,158 | 10 |   123 | 2 |
 | PetFinder    | 14,993 | 17 | 5,595 | 4 |
 
-### 6.1 Adult Dataset
+### 7.1 Adult Dataset
 Predict whether an adult's income is higher or lower than $50k, using census information given 15 census information.
 https://archive.ics.uci.edu/ml/datasets/Adult
 
-### 6.2 Mushrooms Dataset
+### 7.2 Mushrooms Dataset
 predict whether a mushroom is poisonous given 23 categorical descriptors.  
 https://www.kaggle.com/uciml/mushroom-classification#
 
-### 6.3 Titanic Dataset
+### 7.3 Titanic Dataset
 Aims to predict whether a Titanic passenger survived given a few descriptors. only some minimal imputing and feature engineering was performed.
 https://www.kaggle.com/uciml/mushroom-classification#
 
-### 3.4 HR Analytics Dataset
+### 7.4 HR Analytics Dataset
 Aims to predict whether a data scientist is looking for a job change or not. only some minimal imputing and feature engineering was performed.
 https://www.kaggle.com/arashnic/hr-analytics-job-change-of-data-scientists
 
-### 3.5 PetFinder
+### 7.5 PetFinder
 Aims to predict whether a pet will be adopted within a 100 days.
 https://www.kaggle.com/c/petfinder-adoption-prediction/data
 
 
 
 ---
-## 5. Main Findings
-### 5.1 F1-score comparison
+## 8. Main Findings
+### 8.1 F1-score comparison
 KNeighborsClassifier                          | LGBMClassifier                               | LogisticRegression | RandomForestClassifier
 :--------------------------------------------:|:---------------------------------------:|:------------------:|:--------------------------------------------:|
 <img src="figures/heatmap_f1_KNeighborsClassifier.png" alt="KNN" height="150"/> | <img src="figures/heatmap_f1_LGBMClassifier.png" alt="LGBM" height="150"/> | <img src="figures/heatmap_f1_LogisticRegression.png" alt="LR" height="150"/> | <img src="figures/heatmap_f1_RandomForestClassifier.png" alt="RF" height="150"/>
@@ -139,8 +139,15 @@ KNeighborsClassifier                          | LGBMClassifier                  
 - **Ordinal Encoders** are, understanbly, performing poorly for linear classifiers that rely on topological distance for training and predictions (KNN, LogisticRegression). Both Mean-Target Encoding and unidimensional embeddings therefore allow to significantly improve performance for those models without increasing the input's dimensionality after transformation.
 - **One Hot Encoders** tend to work well for LogisticRegressions. On the other hand, it consistently performed poorly when used in conjunction with RandomForests. this could be due to the limited max_depth (10) used to parameterize RFs, making it less able to operate with high dimensionality transformations.
 
+### 8.2 Comparing Mean Target Encoding to 1-dim Embeddings
+Comparing the values explicitly calculated through Mean Target Encoding and 1-dim Embeddings show strong correlation (see below figures).
+This comparison validates the intuition that through back-propagation, the learnt 1-dim embeddings tend to generate distances that correlate with the likelihood of a category to be associated with a positive label.  
+**PetFinder** ![](figures/mte_embs_correlation_petfinder.png)
+**Adults** ![](figures/mte_embs_correlation_adults.png)
 
-### 5.2 All Results 
+
+
+### 8.3 All Results 
 
 The below charts provide more detailed results at the task level, including standard deviation observed for each metric for each encoder / classifier pairs.
 **Adult Task** ![](figures/adults.png)
@@ -148,6 +155,8 @@ The below charts provide more detailed results at the task level, including stan
 **Titanic Task** ![](figures/titanic.png)
 **HR Analytics Task** ![](figures/hr_analytics.png)
 **PetFinder** ![](figures/petfinder.png)
+
+Detailed experiment logs can be found in CSV format within the [`reports/`](reports/) folder.
 
 ---
 ## 9. Next Steps
@@ -167,5 +176,5 @@ The below charts provide more detailed results at the task level, including stan
 - [x] build streamlit app to explore various benchmarking options.
 - [x] manage configuration via a YAML configuration file and a config module.
 - [x] generalize transformation strategy as a set of "MonoTransformations" > similar to tfx
-- [ ] evaluate correlation of MTE with `single` dimension embeddings.
+- [x] evaluate correlation of MTE with `single` dimension embeddings.
 - [ ] provide more detailed docstrings
